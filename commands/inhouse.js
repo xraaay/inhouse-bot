@@ -27,10 +27,8 @@ module.exports = {
         let playerNumber = args[0] || 10;
         if (!message.guild) return;
 
-
         // if (message.member.voice.channel) {
         let memberArr = []
-        let botMsg;
         const filter = (reaction, user) => {
             return ['👍'] && !user.bot;
         };
@@ -50,12 +48,23 @@ module.exports = {
                 collection.on('collect', (reaction, user) => {
                     console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
                     if (!memberArr.includes(user.tag)) {
-                        memberArr.push(user.tag);
+                        console.log(user)
+                        // console.log(message.guild.members)
+                        const player = message.guild.members.cache.find(
+                            (user) =>
+                            // console.log(user.user.username)
+                            // user.user.username.toLowerCase() === username.toLowerCase() ||
+                            // (user.nickname && user.nickname.toLowerCase() === username.toLowerCase())
+                          {})
+                        memberArr.push(player);
+                        console.log(player)
                     }
                 })
                 collection.on('end', collected => {
+                    let voiceChannels;
+
                     message.channel.send(`Count: ${memberArr.length}\nMembers: ${memberArr.join(" ")}`)
-                    if (memberArr.length % 2 === 0) {
+                    // if (memberArr.length % 2 === 0) {
                         let shuffledArr = shuffle(memberArr)
                         let mid = Math.ceil(shuffledArr.length / 2)
                         let teams = {
@@ -65,11 +74,18 @@ module.exports = {
 
                         message.channel.send("Team One: " + teams.one.join(", "))
                         message.channel.send("Team Two: " + teams.two.join(", "))
-                    } else if (memberArr.length < playerNumber){
-                        message.channel.send("Not enough players")
-                    } else {
-                        message.channel.send("Error: Teams are uneven")
-                    }
+
+                        message.guild.channels.create("Team One", { type: "voice" })
+
+                        // voiceChannels = message.guild.channels.filter(item => item.type === "voice")
+                        // console.log(voiceChannels)
+
+
+                    // } else if (memberArr.length < playerNumber){
+                    //     message.channel.send("Not enough players")
+                    // } else {
+                    //     message.channel.send("Error: Teams are uneven")
+                    // }
                 })
             }
             )
