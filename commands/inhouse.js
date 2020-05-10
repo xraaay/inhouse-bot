@@ -27,7 +27,7 @@ module.exports = {
         let playerNumber = args[0] || 10;
         if (!message.guild) return;
 
-        // if (message.member.voice.channel) {
+        if (message.member.voice.channel) {
         let memberArr = []
         const filter = (reaction, user) => {
             return ['👍'] && !user.bot;
@@ -48,23 +48,12 @@ module.exports = {
                 collection.on('collect', (reaction, user) => {
                     console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
                     if (!memberArr.includes(user)) {
-                        // console.log(user)
-                        // console.log(message.guild.members)
-                        // const player = message.guild.members.cache.find(
-                        //     (user) =>
-                        //     // console.log(user.user.username)
-                        //     user.user.username.toLowerCase() === username.toLowerCase() ||
-                        //     (user.nickname && user.nickname.toLowerCase() === username.toLowerCase())
-                        //   )
                         memberArr.push(user);
-                        // console.log(player)
                     }
                 })
                 collection.on('end', collected => {
-                    let voiceChannels;
-
                     message.channel.send(`Count: ${memberArr.length}\nMembers: ${memberArr.join(" ")}`)
-                    // if (memberArr.length % 2 === 0) {
+                    if (memberArr.length % 2 === 0) {
                         let shuffledArr = shuffle(memberArr)
                         let mid = Math.ceil(shuffledArr.length / 2)
                         let teams = {
@@ -85,6 +74,12 @@ module.exports = {
                                     let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
                                     member.setChannel(res.id)
                                 })
+                                let deleteChannelOne = client.setInterval(function(){
+                                    if(res.members.size === 0){
+                                        res.delete();
+                                        clearInterval(deleteChannelOne)
+                                    }
+                                }, 5000)
                             })
                         message.guild.channels.create("Team Two", { type: "voice" })
                             .then(res => {
@@ -95,14 +90,23 @@ module.exports = {
                                     let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
                                     member.setChannel(res.id)
                                 })
+                                let deleteChannelTwo = client.setInterval(function(){
+                                    if(res.members.size === 0){
+                                        res.delete();
+                                        clearInterval(deleteChannelTwo)
+                                    }
+                                }, 5000)
                             })
-                    // } else if (memberArr.length < playerNumber){
-                    //     message.channel.send("Not enough players")
-                    // } else {
-                    //     message.channel.send("Error: Teams are uneven")
-                    // }
+                    } else if (memberArr.length < playerNumber){
+                        message.channel.send("Not enough players")
+                    } else {
+                        message.channel.send("Error: Teams are uneven")
+                    }
                 })
             }
             )
+        } else {
+            message.channel.send("You must be in a voice channel to use this feature")
+        }
     },
 };
