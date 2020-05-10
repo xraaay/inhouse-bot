@@ -23,7 +23,7 @@ module.exports = {
     name: 'inhouse',
     description: 'Joins a voice channel',
     args: false,
-    execute(message, args) {
+    execute(message, args, client) {
         let playerNumber = args[0] || 10;
         if (!message.guild) return;
 
@@ -47,17 +47,17 @@ module.exports = {
 
                 collection.on('collect', (reaction, user) => {
                     console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
-                    if (!memberArr.includes(user.tag)) {
-                        console.log(user)
+                    if (!memberArr.includes(user)) {
+                        // console.log(user)
                         // console.log(message.guild.members)
-                        const player = message.guild.members.cache.find(
-                            (user) =>
-                            // console.log(user.user.username)
-                            // user.user.username.toLowerCase() === username.toLowerCase() ||
-                            // (user.nickname && user.nickname.toLowerCase() === username.toLowerCase())
-                          {})
-                        memberArr.push(player);
-                        console.log(player)
+                        // const player = message.guild.members.cache.find(
+                        //     (user) =>
+                        //     // console.log(user.user.username)
+                        //     user.user.username.toLowerCase() === username.toLowerCase() ||
+                        //     (user.nickname && user.nickname.toLowerCase() === username.toLowerCase())
+                        //   )
+                        memberArr.push(user);
+                        // console.log(player)
                     }
                 })
                 collection.on('end', collected => {
@@ -76,11 +76,26 @@ module.exports = {
                         message.channel.send("Team Two: " + teams.two.join(", "))
 
                         message.guild.channels.create("Team One", { type: "voice" })
-
-                        // voiceChannels = message.guild.channels.filter(item => item.type === "voice")
-                        // console.log(voiceChannels)
-
-
+                            .then(res => {
+                                // console.log(res)
+                                console.log("Created Voice ID: " + res.id)
+                                console.log("Guild ID: " + res.guild.id)
+                                
+                                teams.one.forEach(item => {
+                                    let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
+                                    member.setChannel(res.id)
+                                })
+                            })
+                        message.guild.channels.create("Team Two", { type: "voice" })
+                            .then(res => {
+                                console.log("Created Voice ID: " + res.id)
+                                console.log("Guild ID: " + res.guild.id)
+                                
+                                teams.two.forEach(item => {
+                                    let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
+                                    member.setChannel(res.id)
+                                })
+                            })
                     // } else if (memberArr.length < playerNumber){
                     //     message.channel.send("Not enough players")
                     // } else {

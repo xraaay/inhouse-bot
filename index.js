@@ -29,7 +29,7 @@ client.on('message', message => {
     if(command.args && !args.length){
         return message.channel.send(`No arguments`)
     }
-
+    
     try {
         command.execute(message, args, client);
     } catch (error) {
