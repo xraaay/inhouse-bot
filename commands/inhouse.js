@@ -1,23 +1,4 @@
-function shuffle(array) {
-    var currentIndex = array.length,
-        temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
-
+const { shuffle } = require("../helpers/reuseableFunctions.js")
 
 module.exports = {
     name: 'inhouse',
@@ -26,10 +7,6 @@ module.exports = {
     execute(message, args, client) {
         let playerNumber = args[0] || 10;
         if (!message.guild) return;
-        // if(typeof(args[0]) !== 'number'){
-        //     message.channel.send("Invalid Argument: Expected number got " + typeof(args[0])) 
-        //     return
-        // } 
 
         if (message.member.voice.channel) {
             let memberArr = []
@@ -58,12 +35,8 @@ module.exports = {
                     collection.on('end', collected => {
                         message.channel.send(`Count: ${memberArr.length}\nMembers: ${memberArr.join(" ")}`)
                         if (memberArr.length % 2 === 0) {
-                            let shuffledArr = shuffle(memberArr)
-                            let mid = Math.ceil(shuffledArr.length / 2)
-                            let teams = {
-                                one: shuffledArr.slice(0, mid),
-                                two: shuffledArr.slice(mid)
-                            }
+                            let shuffledArr = shuffleArray(memberArr)
+                            let teams = splitArray(shuffledArr);
                             
                             message.channel.send("Team One: " + teams.one.join(", "))
                             message.channel.send("Team Two: " + teams.two.join(", "))
