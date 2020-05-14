@@ -1,0 +1,28 @@
+{
+  "name": "shuffle-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "ffmpeg-static": "^4.2.1",
+    "ytdl-core": "^2.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xraaay/shuffle-bot.git"
+  },
+  "author": "Raymond Xie <raymond.y.xie@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xraaay/shuffle-bot/issues"
+  },
+  "homepage": "https://github.com/xraaay/shuffle-bot#readme",
+  "engines": {
+    "node": "12.16.1"
+  }
+}
