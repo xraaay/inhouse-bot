@@ -8,17 +8,20 @@ module.exports = {
     args: false,
     async execute(message, args, client) {
         if(message.member.voice.channel){
-            const connection = await message.member.voice.channel.join()
-            // let urlNumber = urls.length-1
-            console.log(urls.length)
-            let videoNumber = getRandomInt(0, urls.length)
-            console.log(videoNumber)
-            console.log(urls[videoNumber])
-            const dispatcher = connection.play(ytdl(urls[videoNumber], { filter: "audioonly" }))
-            dispatcher.setVolume(0.5)
-            dispatcher.on("finish", () => {
-                connection.disconnect()
-            })
+            let videoNumber = getRandomInt(0, urls.length-1)
+            // console.log(videoNumber)
+            // console.log(urls[videoNumber])
+            message.member.voice.channel.join()
+                .then(connection => {
+                    const dispatcher = connection.play(ytdl(urls[videoNumber], { filter: "audioonly"}), { volume: 0.5 })
+                    dispatcher.on("finish", () => {
+                        connection.disconnect()
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                    message.channel.send("Something went wrong")
+                })
         } else {
             message.reply("You need to be in a voice channel")
         }

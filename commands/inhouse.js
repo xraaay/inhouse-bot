@@ -1,4 +1,4 @@
-const { shuffle } = require("../helpers/reuseableFunctions.js")
+const { shuffleArray, splitArray } = require("../helpers/reuseableFunctions")
 
 module.exports = {
     name: 'inhouse',
@@ -55,7 +55,7 @@ module.exports = {
                                             res.delete();
                                             clearInterval(deleteChannelOne)
                                         }
-                                    }, 5000)
+                                    }, 10000)
                                 })
                                 .catch(err => {
                                     console.log(err)
@@ -74,7 +74,7 @@ module.exports = {
                                             res.delete();
                                             clearInterval(deleteChannelTwo)
                                         }
-                                    }, 5000)
+                                    }, 10000)
                                 })
                                 .catch(err => {
                                     console.log(err)
