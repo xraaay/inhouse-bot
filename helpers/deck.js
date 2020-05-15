@@ -44,7 +44,6 @@ const organizedDeck = (
 class Deck {
   constructor() {
     this.deck = organizedDeck;
-    this.cardPosition = 0;
   }
   
   shuffle() {
