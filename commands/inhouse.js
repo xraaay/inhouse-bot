@@ -2,7 +2,7 @@ const { shuffleArray, splitArray } = require("../helpers/reuseableFunctions")
 
 module.exports = {
     name: 'inhouse',
-    description: 'Creates two temporary voice channels and moves teams into separate rooms',
+    description: 'Creates two temporary team voice channels and moves players into random teams',
     usage: "[optional: player count]",
     args: false,
     execute(message, args) {
