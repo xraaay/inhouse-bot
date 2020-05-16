@@ -2,9 +2,10 @@ const { shuffleArray, splitArray } = require("../helpers/reuseableFunctions")
 
 module.exports = {
     name: 'inhouse',
-    description: 'Joins a voice channel',
+    description: 'Creates two temporary voice channels and moves teams into separate rooms',
+    usage: "[optional: player count]",
     args: false,
-    execute(message, args, client) {
+    execute(message, args) {
         let playerNumber = args[0] || 10;
         if (!message.guild) return;
 
@@ -50,7 +51,7 @@ module.exports = {
                                         let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
                                         member.setChannel(res.id)
                                     })
-                                    let deleteChannelOne = client.setInterval(function(){
+                                    let deleteChannelOne = message.client.setInterval(function(){
                                         if(res.members.size === 0){
                                             res.delete();
                                             clearInterval(deleteChannelOne)
@@ -69,7 +70,7 @@ module.exports = {
                                         let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
                                         member.setChannel(res.id)
                                     })
-                                    let deleteChannelTwo = client.setInterval(function(){
+                                    let deleteChannelTwo = message.client.setInterval(function(){
                                         if(res.members.size === 0){
                                             res.delete();
                                             clearInterval(deleteChannelTwo)
