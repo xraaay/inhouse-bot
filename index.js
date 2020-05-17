@@ -65,5 +65,7 @@ client.on('message', message => {
 })
 
 client.once('ready', () => {
+    let guilds = client.guilds.cache.map(item => item.name)
+    console.log(guilds)
     console.log('Ready!');
 });

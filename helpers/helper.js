@@ -15,9 +15,7 @@ const createTeamChannels = (message, team, name) => {
             movePlayers(message, res, team)
             handleTempChannel(message, res)
         })
-        .catch(err => {
-            console.log(err)
-        })
+        .catch(console.error)
 }
 
 const handleTempChannel = (message, res) => {
@@ -71,6 +69,7 @@ const handleCollectPlayers = (message, args) => {
                 }
             })
         })
+        .catch(console.error)
 }
 
 const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
@@ -78,7 +77,7 @@ const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
     let teams = splitArray(shuffledArr);
     let response = `==================================\nCount: ${memberArr.length}\nMembers: ${memberArr.join(" ")}\nTeam One: ${teams.one.join(", ")}\nTeam Two: ${teams.two.join(", ")}`
     message.channel.send(response)
-    message.reply("react to confirm or reshuffle")
+    message.reply("react with 👍 to confirm or 👎 to reshuffle")
         .then(msg => {
             msg.react("👍")
             msg.react("👎")
@@ -99,6 +98,7 @@ const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
                 }
             })
         })
+        .catch(console.error)
 }
 
 module.exports = {
