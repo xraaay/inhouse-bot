@@ -38,10 +38,10 @@ client.on('message', message => {
         cooldowns.set(command.name, new Discord.Collection());
     }
     const timestamps = cooldowns.get(command.name);
+    const now = Date.now();
+    const cooldownAmount = (command.cooldown || 3) * 1000;
     
     if (timestamps.has(message.author.id)) {
-        const now = Date.now();
-        const cooldownAmount = (command.cooldown || 3) * 1000;
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
@@ -51,9 +51,9 @@ client.on('message', message => {
             }
         }
 
-        timestamps.set(message.author.id, now);
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }
+    timestamps.set(message.author.id, now);
+    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
     //try execute
     try {
