@@ -3,8 +3,8 @@ const {
     splitArray
 } = require("../helpers/reuseableFunctions")
 
-const createTeamChannels = (message, team) => {
-    message.guild.channels.create("Team One", {
+const createTeamChannels = (message, team, name) => {
+    message.guild.channels.create(name, {
             type: "voice",
             parent: message.member.voice.channel.parentID
         })
@@ -12,7 +12,7 @@ const createTeamChannels = (message, team) => {
             console.log("Created Voice ID: " + res.id)
             console.log("Guild ID: " + res.guild.id)
 
-            movePlayers(team)
+            movePlayers(message, res, team)
             handleTempChannel(message, res)
         })
         .catch(err => {
@@ -26,10 +26,10 @@ const handleTempChannel = (message, res) => {
             res.delete();
             clearInterval(teamChannel)
         }
-    }, 10000)
+    }, 5000)
 }
 
-const movePlayers = (team, res) => {
+const movePlayers = (message, res, team) => {
     team.forEach(item => {
         let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
         member.setChannel(res.id)
@@ -61,7 +61,7 @@ const handleCollectPlayers = (message, args) => {
                 }
             })
 
-            collection.on('end', collected => {
+            collection.on('end', () => {
                 if (memberArr.length % 2 === 0) {
                     handleTeamShuffle(message, hostId, memberArr, playerNumber)
                 } else if (memberArr.length < playerNumber) {
@@ -90,10 +90,10 @@ const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
                 max: 1
             })
 
-            collection.on('collect', (reaction, user) => {
+            collection.on('collect', (reaction) => {
                 if (reaction.emoji.name === '👍') {
-                    createTeamChannels(message, teams.one);
-                    createTeamChannels(message, teams.two);
+                    createTeamChannels(message, teams.one, "Team One");
+                    createTeamChannels(message, teams.two, "Team Two");
                 } else if (reaction.emoji.name === '👎') {
                     handleTeamShuffle(message, hostId, memberArr, playerNumber)
                 }

@@ -28,19 +28,20 @@ client.on('message', message => {
 
     const command = client.commands.get(commandName);
 
+    //check arguments
     if (command.args && !args.length) {
         return message.channel.send(`No arguments`)
     }
 
+    //check cooldown
     if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection());
     }
-
-    const now = Date.now();
     const timestamps = cooldowns.get(command.name);
-    const cooldownAmount = (command.cooldown || 3) * 1000;
-
+    
     if (timestamps.has(message.author.id)) {
+        const now = Date.now();
+        const cooldownAmount = (command.cooldown || 3) * 1000;
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
@@ -54,8 +55,9 @@ client.on('message', message => {
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }
 
+    //try execute
     try {
-        command.execute(message, args, client);
+        command.execute(message, args);
     } catch (error) {
         console.error(error)
         message.reply("There was an error executing that command")

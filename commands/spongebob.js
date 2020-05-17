@@ -6,7 +6,7 @@ module.exports = {
     name: 'spongebob',
     description: 'Plays a random spongebob quote',
     args: false,
-    async execute(message, args, client) {
+    async execute(message) {
         if(message.member.voice.channel){
             let videoNumber = randomInteger(0, urls.length-1)
             console.log(videoNumber)

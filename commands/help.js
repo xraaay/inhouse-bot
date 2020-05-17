@@ -4,7 +4,7 @@ module.exports = {
     aliases: ['commands'],
     usage: '[command name]',
     args: false,
-    execute(message, args, client) {
+    execute(message, args) {
         let prefix = process.env.PREFIX
         const commands = message.client.commands
         let commandList = commands.map(command => prefix + command.name).join(", ")
