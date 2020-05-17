@@ -13,14 +13,14 @@ const createTeamChannels = (message, team) => {
             console.log("Guild ID: " + res.guild.id)
 
             movePlayers(team)
-            handleTempChannel(message)
+            handleTempChannel(message, res)
         })
         .catch(err => {
             console.log(err)
         })
 }
 
-const handleTempChannel = (message) => {
+const handleTempChannel = (message, res) => {
     let teamChannel = message.client.setInterval(function () {
         if (res.members.size === 0) {
             res.delete();
@@ -29,7 +29,7 @@ const handleTempChannel = (message) => {
     }, 10000)
 }
 
-const movePlayers = (team) => {
+const movePlayers = (team, res) => {
     team.forEach(item => {
         let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
         member.setChannel(res.id)
@@ -51,7 +51,7 @@ const handleCollectPlayers = (message, args) => {
 
             let collection = msg.createReactionCollector(memberFilter, {
                 time: 30000,
-                max: args[0] || 10
+                max: playerNumber
             })
 
             collection.on('collect', (reaction, user) => {
@@ -76,7 +76,9 @@ const handleCollectPlayers = (message, args) => {
 const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
     let shuffledArr = shuffleArray(memberArr)
     let teams = splitArray(shuffledArr);
-    message.channel.send(`==================================\nCount: ${memberArr.length}\nMembers: ${memberArr.join(" ")}\nTeam One: ${teams.one.join(", ")}\nTeam Two: ${teams.two.join(", ")}\nReact to confirm or reshuffle`)
+    let response = `==================================\nCount: ${memberArr.length}\nMembers: ${memberArr.join(" ")}\nTeam One: ${teams.one.join(", ")}\nTeam Two: ${teams.two.join(", ")}`
+    message.channel.send(response)
+    message.reply("react to confirm or reshuffle")
         .then(msg => {
             msg.react("👍")
             msg.react("👎")
@@ -100,7 +102,5 @@ const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
 }
 
 module.exports = {
-    createTeamChannels,
-    handleCollectPlayers,
-    handleTeamShuffle
+    handleCollectPlayers
 }
