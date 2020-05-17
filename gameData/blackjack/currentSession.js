@@ -7,9 +7,36 @@ const { shuffleArray } = require('../../helpers/reuseableFunctions');
 
 
 let inSession = [];
+let sessionSettings = {
+  deckNum:6,
+  maxCashAmount:200,
+  minBet:5,
+  maxBet:20,
+  soft:17,
+};
 let currentlySeated;
 let seatTurn = 0;
 let shoe = [];
+
+
+const isSession = hostSetting => {
+  let host = hostSetting.player;
+  let settings = hostSetting.settings
+  if (inSession.length > 0) throw (
+    'Someone is in a session already, please join!'
+  );
+
+  sessionSettings = { ...settings };
+  inSession.push(host);
+
+  // console.log(inSession)
+  // console.log(sessionSettings)
+  // console.log(sessionSettings)
+
+  return 'Session has been created!'
+
+}
+
 const loadUpShoe = loadUpSetting => {
   if (!loadUpSetting.amount) {
     throw ('missing object {amount:num, cardSplit:num [OPTIONAL]}')
@@ -28,6 +55,36 @@ const loadUpShoe = loadUpSetting => {
   }
   shoe.shift();
 }
+
+const joinTable = userInfo => {
+  const userID = userInfo.userID;
+  const seat = userInfo.seat;
+  const cash = userInfo.cash;
+
+  if (!seat) {
+    inSession.push(userID);
+    return 'you have joined the session! type #blackjack join seat=[0-6] when ever youre ready to play!'
+  };
+
+  if (table[`seat${seat}`].player) {
+    console.log('sorry been taken')
+    return 'Sorry, seat is taken please check another seat!'
+  };
+
+  if (!cash) {
+    inSession.push(userID);
+    table[`seat${seat}`].player = userID;
+    return `you have sat down at seat number ${seat} please place bets!`
+  };
+
+  inSession.push(userID);
+  table[`seat${seat}`].player = userID;
+  table[`seat${seat}`].cash = cash;
+  // console.log(table)
+  return `you have sat down at seat number ${seat} with $${cash} please place bets!`
+}
+
+
 const dispense = minBet => {
   let playerKeyArr = Object.keys(table)
   const dealCardsOrder = playerKeyArr.filter(val => !!table[val].player && table[val].bets > minBet);
@@ -126,12 +183,17 @@ const hit = () => {
 
 }
 
+// joinTable({userID: 'hello andy', seat:'3', cash:100})
+// console.log(table)
+
 
 
 
 module.exports = {
   dispense,
   loadUpShoe,
+  isSession,
+  joinTable,
 }
 
 // need to load shoe

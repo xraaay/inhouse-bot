@@ -15,7 +15,7 @@ class Player {
   recalculatePercentage () {
     const winLossGames = this.win + this.loss;
     this.winPercentage = this.win / winLossGames;
-    console.log('hello')
+    // console.log('hello')
   }
 }
 

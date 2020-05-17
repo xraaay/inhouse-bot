@@ -26,8 +26,18 @@ const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const arrToObjWithEquals = (arr) => {
+    const settingArgObj = {};
+    arr.forEach((val) => {
+      let splitAtEqual = val.split('=');
+      return settingArgObj[splitAtEqual[0]] = Number(splitAtEqual[1]);
+    });
+    return settingArgObj
+}
+
 module.exports = {
     shuffleArray,
     splitArray,
-    getRandomInt
+    getRandomInt,
+    arrToObjWithEquals,
 }
