@@ -62,7 +62,7 @@ const handleCollectPlayers = (message, args) => {
             })
 
             collection.on('end', () => {
-                if (memberArr.length % 2 === 0) {
+                if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
                     handleTeamShuffle(message, hostId, memberArr, playerNumber)
                 } else if (memberArr.length < playerNumber) {
                     message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
