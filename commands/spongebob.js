@@ -1,6 +1,6 @@
 const ytdl = require("ytdl-core")
 const { urls } = require("../helpers/urls")
-const { getRandomInt } = require("../helpers/reuseableFunctions")
+const { randomInteger } = require("../helpers/reuseableFunctions")
 
 module.exports = {
     name: 'spongebob',
@@ -8,7 +8,7 @@ module.exports = {
     args: false,
     async execute(message, args, client) {
         if(message.member.voice.channel){
-            let videoNumber = getRandomInt(0, urls.length-1)
+            let videoNumber = randomInteger(0, urls.length-1)
             console.log(videoNumber)
             console.log(urls[videoNumber])
             message.member.voice.channel.join()

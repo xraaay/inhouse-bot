@@ -12,20 +12,28 @@ const createTeamChannels = (message, team) => {
             console.log("Created Voice ID: " + res.id)
             console.log("Guild ID: " + res.guild.id)
 
-            team.forEach(item => {
-                let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
-                member.setChannel(res.id)
-            })
-            let teamChannel = message.client.setInterval(function () {
-                if (res.members.size === 0) {
-                    res.delete();
-                    clearInterval(teamChannel)
-                }
-            }, 10000)
+            movePlayers(team)
+            handleTempChannel(message)
         })
         .catch(err => {
             console.log(err)
         })
+}
+
+const handleTempChannel = (message) => {
+    let teamChannel = message.client.setInterval(function () {
+        if (res.members.size === 0) {
+            res.delete();
+            clearInterval(teamChannel)
+        }
+    }, 10000)
+}
+
+const movePlayers = (team) => {
+    team.forEach(item => {
+        let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
+        member.setChannel(res.id)
+    })
 }
 
 const handleCollectPlayers = (message, args) => {
@@ -40,7 +48,7 @@ const handleCollectPlayers = (message, args) => {
             const memberFilter = (reaction, user) => {
                 return ['👍'].includes(reaction.emoji.name) && !user.bot;
             };
-            
+
             let collection = msg.createReactionCollector(memberFilter, {
                 time: 30000,
                 max: args[0] || 10
@@ -54,42 +62,41 @@ const handleCollectPlayers = (message, args) => {
             })
 
             collection.on('end', collected => {
-                handleTeamShuffle(message, hostId, memberArr, playerNumber)
+                if (memberArr.length % 2 === 0) {
+                    handleTeamShuffle(message, hostId, memberArr, playerNumber)
+                } else if (memberArr.length < playerNumber) {
+                    message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
+                } else {
+                    message.channel.send("Unable to start... Teams are uneven")
+                }
             })
         })
 }
 
 const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
-    if (memberArr.length % 2 === 0) {
-        message.channel.send(`Count: ${memberArr.length}\nMembers: ${memberArr.join(" ")}`)
-        let shuffledArr = shuffleArray(memberArr)
-        let teams = splitArray(shuffledArr);
-        message.channel.send(`Team One: ${teams.one.join(", ")}\nTeam Two: ${teams.two.join(", ")}\nReact to confirm or reshuffle`)
-            .then(msg => {
-                msg.react("👍")
-                msg.react("👎")
-                const shuffleFilter = (reaction, user) => {
-                    return ['👍', '👎'].includes(reaction.emoji.name) && user.id === hostId;
-                };
-                let collection = msg.createReactionCollector(shuffleFilter, {
-                    time: 60000,
-                    max: 1
-                })
-
-                collection.on('collect', (reaction, user) => {
-                    if (reaction.emoji.name === '👍') {
-                        createTeamChannels(message, teams.one);
-                        createTeamChannels(message, teams.two);
-                    } else if (reaction.emoji.name === '👎') {
-                        handleTeamShuffle(message, hostId, memberArr, playerNumber)
-                    }
-                })
+    let shuffledArr = shuffleArray(memberArr)
+    let teams = splitArray(shuffledArr);
+    message.channel.send(`==================================\nCount: ${memberArr.length}\nMembers: ${memberArr.join(" ")}\nTeam One: ${teams.one.join(", ")}\nTeam Two: ${teams.two.join(", ")}\nReact to confirm or reshuffle`)
+        .then(msg => {
+            msg.react("👍")
+            msg.react("👎")
+            const shuffleFilter = (reaction, user) => {
+                return ['👍', '👎'].includes(reaction.emoji.name) && user.id === hostId;
+            };
+            let collection = msg.createReactionCollector(shuffleFilter, {
+                time: 60000,
+                max: 1
             })
-        } else if (memberArr.length < playerNumber) {
-            message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
-        } else {
-            message.channel.send("Unable to start... Teams are uneven")
-        }
+
+            collection.on('collect', (reaction, user) => {
+                if (reaction.emoji.name === '👍') {
+                    createTeamChannels(message, teams.one);
+                    createTeamChannels(message, teams.two);
+                } else if (reaction.emoji.name === '👎') {
+                    handleTeamShuffle(message, hostId, memberArr, playerNumber)
+                }
+            })
+        })
 }
 
 module.exports = {

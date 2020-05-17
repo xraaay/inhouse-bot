@@ -12,6 +12,10 @@ const shuffleArray = (array) => {
     return array;
 }
 
+function randomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
 const splitArray = (arr) => {
     let mid = Math.ceil(arr.length / 2)
     return {
@@ -29,5 +33,6 @@ const getRandomInt = (min, max) => {
 module.exports = {
     shuffleArray,
     splitArray,
-    getRandomInt
+    getRandomInt,
+    randomInteger
 }
