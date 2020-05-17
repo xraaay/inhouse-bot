@@ -60,7 +60,7 @@ const handleCollectPlayers = (message, args) => {
 }
 
 const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
-    // if (memberArr.length % 2 === 0) {
+    if (memberArr.length % 2 === 0) {
         message.channel.send(`Count: ${memberArr.length}\nMembers: ${memberArr.join(" ")}`)
         let shuffledArr = shuffleArray(memberArr)
         let teams = splitArray(shuffledArr);
@@ -85,11 +85,11 @@ const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
                     }
                 })
             })
-        // } else if (memberArr.length < playerNumber) {
-        //     message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
-        // } else {
-        //     message.channel.send("Unable to start... Teams are uneven")
-        // }
+        } else if (memberArr.length < playerNumber) {
+            message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
+        } else {
+            message.channel.send("Unable to start... Teams are uneven")
+        }
 }
 
 module.exports = {
