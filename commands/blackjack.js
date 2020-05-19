@@ -5,6 +5,7 @@ const {
   loadUpShoe,
   isSession,
   joinTable,
+  betAmount,
 } = require('../gameData/blackjack/currentSession');
 
 const setting = {
@@ -109,25 +110,17 @@ module.exports = something = {
           return message.reply(createNewSessMessage)
         }
         catch (err) {
-          return message.reply(err)
+          return console.error(err)
         }
       }
       if (initialArg === 'create') {
         let settingArgObj = arrToObjWithEquals(args.slice(1))
-        // const settingArgArr = (args.slice(1));
-        // const settingArgObj = {};
-        // settingArgArr.forEach((val) => {
-        //   let splitAtEqual = val.split('=');
-        //   return settingArgObj[splitAtEqual[0]] = Number(splitAtEqual[1]);
-        // });
         let newSetting = { ...defaultSetting, ...settingArgObj }
         try {
           let createNewSessMessage = isSession({ player: 'someUser1', settings: newSetting });
-          // return console.log(createNewSessMessage)
           return message.reply(createNewSessMessage)
         }
         catch (err) {
-          // return console.log(err)
           return message.reply(err)
         }
       }
@@ -139,9 +132,44 @@ module.exports = something = {
       return message.reply(afterReply)
     }
 
+    if (args[0] === 'bet') {
+      let amount = Number(args[1])
+      return message.channel.send(betAmount({userID: 'andyAdasd', amount}))
+    }
+
     if (args[0] === 'deal') {
+      let messageArr = [];
+      let tableObj = dispense();
+      let seatNames = Object.keys(tableObj);
+
+      seatNames.forEach((val) => {
+        if (tableObj[val].player && val !== 'dealer') {
+          messageArr.push(
+            `${val}: ${tableObj[val].player}
+            Cards: [${tableObj[val].hand.card[0].shape}${tableObj[val].hand.card[0].cardFace}] [${tableObj[val].hand.card[1].shape}${tableObj[val].hand.card[1].cardFace}]\n`
+          );
+        }
+      })
+      
+      messageArr.push(
+        `dealer:${tableObj['dealer'].player}
+            Cards: [*] [${tableObj['dealer'].hand.card[1].shape}${tableObj['dealer'].hand.card[1].cardFace}]`
+      )
+
+      if (messageArr.length > 0) {
+        return message.channel.send(`\`\`\`${messageArr.join('')}\`\`\``)
+      } else {
+        return message.channel.send('oh shit error')
+      }
+
       
     }
+
+
+    // [
+    //   SeatNum: Andy
+    //   Card: A, K
+    // ]
 
 
 

@@ -18,25 +18,6 @@ let currentlySeated;
 let seatTurn = 0;
 let shoe = [];
 
-
-const isSession = hostSetting => {
-  let host = hostSetting.player;
-  let settings = hostSetting.settings
-  if (inSession.length > 0) throw (
-    'Someone is in a session already, please join!'
-  );
-
-  sessionSettings = { ...settings };
-  inSession.push(host);
-
-  // console.log(inSession)
-  // console.log(sessionSettings)
-  // console.log(sessionSettings)
-
-  return 'Session has been created!'
-
-}
-
 const loadUpShoe = loadUpSetting => {
   if (!loadUpSetting.amount) {
     throw ('missing object {amount:num, cardSplit:num [OPTIONAL]}')
@@ -56,13 +37,35 @@ const loadUpShoe = loadUpSetting => {
   shoe.shift();
 }
 
+
+const isSession = hostSetting => {
+  let {player, settings} = hostSetting;
+  if (inSession.length > 0) throw (
+    'Someone is in a session already, please join!'
+  );
+
+  sessionSettings = { ...settings };
+  inSession.push(player);
+
+  loadUpShoe({amount:settings.deckNum})
+
+  return 'Session has been created!'
+
+};
+
 const joinTable = userInfo => {
   const userID = userInfo.userID;
   const seat = userInfo.seat;
   const cash = userInfo.cash;
 
-  if (!seat) {
+  if (inSession.length === 0) return 'Please create session with !blackjack default or !blackjack [with your settings]';
+
+
+  if (inSession.indexOf(userID) === -1) {
     inSession.push(userID);
+  }
+
+  if (!seat) {
     return 'you have joined the session! type #blackjack join seat=[0-6] when ever youre ready to play!'
   };
 
@@ -72,31 +75,15 @@ const joinTable = userInfo => {
   };
 
   if (!cash) {
-    inSession.push(userID);
     table[`seat${seat}`].player = userID;
     return `you have sat down at seat number ${seat} please place bets!`
   };
 
-  inSession.push(userID);
   table[`seat${seat}`].player = userID;
   table[`seat${seat}`].cash = cash;
   // console.log(table)
   return `you have sat down at seat number ${seat} with $${cash} please place bets!`
-}
-
-
-const dispense = minBet => {
-  let playerKeyArr = Object.keys(table)
-  const dealCardsOrder = playerKeyArr.filter(val => !!table[val].player && table[val].bets > minBet);
-  dealCardsOrder.push('dealer');
-  currentlySeated = dealCardsOrder.slice(0);
-  dealCardsOrder.forEach(val => dealCardsOrder.push(val))
-
-  dealCardsOrder.forEach(val => table[val].hand.card.push(shoe.shift()))
-
-
-}
-
+};
 
 class Hand {
   card = [];
@@ -179,6 +166,29 @@ const table = {
   },
 };
 
+const betAmount = betInput => {
+  let {userID, amount} = betInput;
+  let message = 'Please be seated';
+  for (let i = 0; i < 7; i++) {
+    if (table[`seat${i}`].player === userID) {
+      table[`seat${i}`].bets = amount;
+      console.log(table[`seat${i}`])
+      message = `Seat ${i}: ${table[`seat${i}`].player}  has changed their bets to ${amount}`
+    }
+  }
+  return message;
+}
+
+const dispense = () => {
+  let playerKeyArr = Object.keys(table)
+  const dealCardsOrder = playerKeyArr.filter(val => !!table[val].player && table[val].bets >= sessionSettings.minBet);
+  dealCardsOrder.push('dealer');
+  currentlySeated = dealCardsOrder.slice(0);
+  dealCardsOrder.forEach(val => dealCardsOrder.push(val));
+  dealCardsOrder.forEach(val => table[val].hand.card.push(shoe.shift()));
+  return table
+};
+
 const hit = () => {
 
 }
@@ -194,6 +204,7 @@ module.exports = {
   loadUpShoe,
   isSession,
   joinTable,
+  betAmount,
 }
 
 // need to load shoe
