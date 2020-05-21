@@ -64,6 +64,14 @@ client.on('message', message => {
     }
 })
 
+client.on("guildCreate", guild => {
+    let channel = guild.channels.cache.find(channel => {
+        return channel.type === 'text' && channel.permissionsFor(guild.me).has(['VIEW_CHANNEL', 'SEND_MESSAGES']);
+    });
+    console.log(channel)
+    return channel.send(`Thanks for inviting me into this server! You can get a list of my commands with #help or you can start an inhouse with #inhouse {player number}`)
+});
+
 client.once('ready', () => {
     let guilds = client.guilds.cache.map(item => item.name)
     console.log(guilds)
