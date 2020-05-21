@@ -2,6 +2,8 @@ const {
     shuffleArray,
     splitArray
 } = require("../helpers/reuseableFunctions")
+const Discord = require("discord.js")
+
 
 const createTeamChannels = (message, team, name) => {
     message.guild.channels.create(name, {
@@ -36,8 +38,12 @@ const movePlayers = (message, res, team) => {
 
 const handleCollectPlayers = (message, args) => {
     let playerNumber = args[0] || 10;
-    let hostId = message.author.id;
+    let host = message.author;
     let memberArr = []
+
+    if(typeof(playerNumber) !== "number" && playerNumber % 1){
+        return message.reply("must be a valid player number")
+    }
 
     message.reply(`is looking for an inhouse for ${playerNumber} people`)
     message.channel.send("React with a thumbs up to opt in")
@@ -61,7 +67,7 @@ const handleCollectPlayers = (message, args) => {
 
             collection.on('end', () => {
                 if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
-                    handleTeamShuffle(message, hostId, memberArr, playerNumber)
+                    handleTeamShuffle(message, host, memberArr, playerNumber)
                 } else if (memberArr.length < playerNumber) {
                     message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
                 } else {
@@ -72,17 +78,17 @@ const handleCollectPlayers = (message, args) => {
         .catch(console.error)
 }
 
-const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
+const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
     let shuffledArr = shuffleArray(memberArr)
     let teams = splitArray(shuffledArr);
-    let response = `==================================\nCount: ${memberArr.length}\nMembers: ${memberArr.join(" ")}\nTeam One: ${teams.one.join(", ")}\nTeam Two: ${teams.two.join(", ")}`
+    let response = handleMessageEmbed(host, teams, playerNumber)
     message.channel.send(response)
     message.reply("react with 👍 to confirm or 👎 to reshuffle")
         .then(msg => {
             msg.react("👍")
             msg.react("👎")
             const shuffleFilter = (reaction, user) => {
-                return ['👍', '👎'].includes(reaction.emoji.name) && user.id === hostId;
+                return ['👍', '👎'].includes(reaction.emoji.name) && user.id === host.id;
             };
             let collection = msg.createReactionCollector(shuffleFilter, {
                 time: 60000,
@@ -94,11 +100,25 @@ const handleTeamShuffle = (message, hostId, memberArr, playerNumber) => {
                     createTeamChannels(message, teams.one, "Team One");
                     createTeamChannels(message, teams.two, "Team Two");
                 } else if (reaction.emoji.name === '👎') {
-                    handleTeamShuffle(message, hostId, memberArr, playerNumber)
+                    handleTeamShuffle(message, host, memberArr, playerNumber)
                 }
             })
         })
         .catch(console.error)
+}
+
+const handleMessageEmbed = (host, teams, playerNumber) => {
+    if(!teams.one[0] || !teams.two[0]) return
+    const embed = new Discord.MessageEmbed()
+        .setColor("#00ffff")
+        .setTitle(`Inhouse for ${playerNumber}`)
+        .setAuthor(host.username, `https://cdn.discordapp.com/avatars/${host.id}/${host.avatar}.png`)
+        .addFields(
+            { name: "Team One", value: teams.one.join(", ")},
+            { name: "Team Two", value: teams.two.join(", ")}
+        )
+        .setTimestamp()
+    return embed;
 }
 
 module.exports = {

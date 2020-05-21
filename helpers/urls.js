@@ -269,7 +269,11 @@ const urls = [
     "https://www.youtube.com/watch?v=a89ChTdUFrc",
     "https://www.youtube.com/watch?v=pwJmVpp8fng",
     "https://www.youtube.com/watch?v=mzx4XCmfvhU",
-    "https://www.youtube.com/watch?v=XOgy-RKEZsQ"
+    "https://www.youtube.com/watch?v=XOgy-RKEZsQ",
+    "https://www.youtube.com/watch?v=ecz_mfugqLs",
+    "https://www.youtube.com/watch?v=gkuMxge22FQ",
+    "https://www.youtube.com/watch?v=ib-pbqQ_xps",
+    "https://www.youtube.com/watch?v=6SxjBWJPf78",
 ]
 
 module.exports = {
