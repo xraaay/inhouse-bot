@@ -69,7 +69,7 @@ client.on("guildCreate", guild => {
         return channel.type === 'text' && channel.permissionsFor(guild.me).has(['VIEW_CHANNEL', 'SEND_MESSAGES']);
     });
     console.log(channel)
-    return channel.send(`Thanks for inviting me into this server! You can get a list of my commands with #help or you can start an inhouse with #inhouse {player number}`)
+    return channel.send(`Thanks for inviting me into this server! You can get a list of my commands with #help or you can start an inhouse with #inhouse [player number]`)
 });
 
 client.once('ready', () => {
