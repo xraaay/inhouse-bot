@@ -73,7 +73,7 @@ client.on("guildCreate", guild => {
 });
 
 client.once('ready', () => {
-    client.user.setActivity("Listening to #help", { type: 'CUSTOM_STATUS'});
+    client.user.setActivity("#help", { type: 'LISTENING' });
     let guilds = client.guilds.cache.map(item => item.name)
     console.log(guilds)
     console.log('Ready!');
