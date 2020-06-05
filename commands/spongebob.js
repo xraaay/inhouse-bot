@@ -13,13 +13,13 @@ module.exports = {
             console.log(urls[videoNumber])
             message.member.voice.channel.join()
                 .then(connection => {
-                    const dispatcher = connection.play(ytdl(urls[videoNumber], { filter: "audioonly"}), { volume: 0.5 })
+                    const dispatcher = connection.play(ytdl(urls[videoNumber], { filter: "audioonly"}), { volume: 0.2 })
                     dispatcher.on("finish", () => {
                         connection.disconnect()
                     })
                 })
                 .catch(err => {
-                    // console.log(err)
+                    console.log(err)
                     message.channel.send("Something went wrong")
                 })
         } else {

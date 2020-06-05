@@ -17,7 +17,14 @@ const createTeamChannels = (message, team, name) => {
             movePlayers(message, res, team)
             handleTempChannel(message, res)
         })
-        .catch(console.error)
+        .catch(err => {
+            console.log(err, "createTeamChannels")
+            if(err.code === 50013){
+                message.channel.send("Missing Permissions")
+            } else {
+                message.channel.send("Something went wrong")
+            }
+        })
 }
 
 const handleTempChannel = (message, res) => {
@@ -75,7 +82,14 @@ const handleCollectPlayers = (message, args) => {
                 }
             })
         })
-        .catch(console.error)
+        .catch(err => {
+            console.log(err, "handleCollectPlayers")
+            if(err.code === 50013){
+                message.channel.send("Missing Permissions")
+            } else {
+                message.channel.send("Something went wrong")
+            }
+        })
 }
 
 const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
@@ -104,7 +118,14 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
                 }
             })
         })
-        .catch(console.error)
+        .catch(error => {
+            console.log(error, "handleTeamShuffle")
+            if(err.code === 50013){
+                message.channel.send("Missing Permissions")
+            } else {
+                message.channel.send("Something went wrong")
+            }
+        })
 }
 
 const handleMessageEmbed = (host, teams, playerNumber) => {
