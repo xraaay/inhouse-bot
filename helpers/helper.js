@@ -18,7 +18,7 @@ const createTeamChannels = (message, team, name) => {
             handleTempChannel(message, res)
         })
         .catch(err => {
-            console.log(err, "createTeamChannels")
+            console.log("createTeamChannels")
             handleError(err, message)
         })
 }
@@ -79,7 +79,7 @@ const handleCollectPlayers = (message, args) => {
             })
         })
         .catch(err => {
-            console.log(err, "handleCollectPlayers")
+            console.log("handleCollectPlayers")
             handleError(err, message)
         })
 }
@@ -111,7 +111,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
             })
         })
         .catch(err => {
-            console.log(err, "handleTeamShuffle")
+            console.log("handleTeamShuffle")
             handleError(err, message)
         })
 }

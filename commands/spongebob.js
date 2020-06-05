@@ -20,6 +20,7 @@ module.exports = {
                     })
                 })
                 .catch(err => {
+                    console.log("spongebob")
                     handleError(err, message)
                 })
         } else {
