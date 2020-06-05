@@ -9,12 +9,12 @@ const token = process.env.TOKEN;
 const dblToken = process.env.DBL_TOKEN
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const dbl = new DBL(dblToken, client)
 
 const cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.login(token);
 
+const dbl = new DBL(dblToken, client)
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
