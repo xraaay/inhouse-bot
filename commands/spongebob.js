@@ -20,7 +20,7 @@ module.exports = {
                 })
                 .catch(err => {
                     console.error(err);
-                    if(err === 50013){
+                    if(err.name === "VOICE_JOIN_CHANNEL"){
                         message.channel.send("Missing Permissions")
                     } else {
                         message.channel.send("Something went wrong")
