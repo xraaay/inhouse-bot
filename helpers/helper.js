@@ -69,13 +69,14 @@ const handleCollectPlayers = (message, args) => {
             })
 
             collection.on('end', () => {
-                if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
+                if (memberArr.length < playerNumber) {
+                    return message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
+                } else if (memberArr.length !== 0 && memberArr.length === playerNumber) {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
-                } else if (memberArr.length < playerNumber) {
-                    message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
                 } else {
-                    message.channel.send("Unable to start... Teams are uneven")
+                    message.channel.send("Something went wrong")
                 }
+                
             })
         })
         .catch(err => {
