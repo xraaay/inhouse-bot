@@ -19,8 +19,12 @@ module.exports = {
                     })
                 })
                 .catch(err => {
-                    console.log(err)
-                    message.channel.send("Something went wrong")
+                    console.log(error, "spongebob")
+                    if(err.code === 50013){
+                        message.channel.send("Missing Permissions")
+                    } else {
+                        message.channel.send("Something went wrong")
+                    }
                 })
         } else {
             message.reply("You need to be in a voice channel")
