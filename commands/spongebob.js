@@ -19,8 +19,8 @@ module.exports = {
                     })
                 })
                 .catch(err => {
-                    console.log(err, "spongebob")
-                    if(err.code === 50013){
+                    console.error(err);
+                    if(err === 50013){
                         message.channel.send("Missing Permissions")
                     } else {
                         message.channel.send("Something went wrong")
