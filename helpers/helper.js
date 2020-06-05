@@ -19,11 +19,7 @@ const createTeamChannels = (message, team, name) => {
         })
         .catch(err => {
             console.log(err, "createTeamChannels")
-            if(err.code === 50013){
-                message.channel.send("Missing Permissions")
-            } else {
-                message.channel.send("Something went wrong")
-            }
+            handleError(err, message)
         })
 }
 
@@ -84,11 +80,7 @@ const handleCollectPlayers = (message, args) => {
         })
         .catch(err => {
             console.log(err, "handleCollectPlayers")
-            if(err.code === 50013){
-                message.channel.send("Missing Permissions")
-            } else {
-                message.channel.send("Something went wrong")
-            }
+            handleError(err, message)
         })
 }
 
@@ -118,13 +110,9 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
                 }
             })
         })
-        .catch(error => {
-            console.log(error, "handleTeamShuffle")
-            if(err.code === 50013){
-                message.channel.send("Missing Permissions")
-            } else {
-                message.channel.send("Something went wrong")
-            }
+        .catch(err => {
+            console.log(err, "handleTeamShuffle")
+            handleError(err, message)
         })
 }
 
@@ -142,6 +130,16 @@ const handleMessageEmbed = (host, teams, playerNumber) => {
     return embed;
 }
 
+const handleError = (err, message) => {
+    console.log(err.name + err.message);
+    if(err.name === "Error [VOICE_JOIN_CHANNEL]"){
+        message.channel.send("Missing Permissions, check channel or bot permissions")
+    } else {
+        message.channel.send("Something went wrong")
+    }
+}
+
 module.exports = {
-    handleCollectPlayers
+    handleCollectPlayers,
+    handleError
 }

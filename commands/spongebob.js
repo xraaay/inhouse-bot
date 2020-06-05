@@ -1,6 +1,7 @@
 const ytdl = require("ytdl-core")
 const { urls } = require("../helpers/urls")
 const { randomInteger } = require("../helpers/reuseableFunctions")
+const { handleError } = require("../helpers/helper")
 
 module.exports = {
     name: 'spongebob',
@@ -19,14 +20,7 @@ module.exports = {
                     })
                 })
                 .catch(err => {
-                    // console.error(err);
-                    console.log(err.name);
-                    console.log(err.message)
-                    if(err.name === "Error [VOICE_JOIN_CHANNEL]"){
-                        message.channel.send("Missing Permissions")
-                    } else {
-                        message.channel.send("Something went wrong")
-                    }
+                    handleError(err, message)
                 })
         } else {
             message.reply("You need to be in a voice channel")
