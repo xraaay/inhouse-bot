@@ -76,5 +76,6 @@ client.once('ready', () => {
     client.user.setActivity("#help", { type: 'LISTENING' });
     let guilds = client.guilds.cache.map(item => item.name)
     console.log(guilds)
+    console.log(`Used in ${guilds.length} servers`)
     console.log('Ready!');
 });

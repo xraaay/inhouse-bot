@@ -7,9 +7,9 @@ module.exports = {
     execute(message, args) {
         let prefix = process.env.PREFIX
         const commands = message.client.commands
-        let commandList = commands.map(command => command.name).join(", ")
+        let commandList = commands.map(command => "**" + process.env.PREFIX + command.name + "**").join(", ")
         if (!args.length) {
-            message.reply(`here's a list of my commands: ${commandList}, try #help [command name] for more info`)
+            message.reply(`here's a list of my commands: ${commandList}, try ${process.env.PREFIX}help [command name] for more info`)
         } else {
             let name = args[0].toLowerCase();
             const data = [];
