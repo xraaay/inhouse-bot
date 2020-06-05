@@ -44,7 +44,7 @@ const handleCollectPlayers = (message, args) => {
     let host = message.author;
     let memberArr = []
 
-    if(typeof(playerNumber) !== "number" && playerNumber % 1){
+    if (typeof (playerNumber) !== "number" && playerNumber % 1) {
         return message.reply("must be a valid player number")
     }
 
@@ -70,13 +70,12 @@ const handleCollectPlayers = (message, args) => {
 
             collection.on('end', () => {
                 if (memberArr.length < playerNumber) {
-                    return message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
-                } else if (memberArr.length !== 0 && memberArr.length === playerNumber) {
+                    message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
+                } else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
                 } else {
-                    message.channel.send("Something went wrong")
+                    message.channel.send("Unable to start... Teams are uneven")
                 }
-                
             })
         })
         .catch(err => {
@@ -118,22 +117,25 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
 }
 
 const handleMessageEmbed = (host, teams, playerNumber) => {
-    if(!teams.one[0] || !teams.two[0]) return
+    if (!teams.one[0] || !teams.two[0]) return
     const embed = new Discord.MessageEmbed()
         .setColor("#00ffff")
         .setTitle(`Inhouse for ${playerNumber}`)
         .setAuthor(host.username, `https://cdn.discordapp.com/avatars/${host.id}/${host.avatar}.png`)
-        .addFields(
-            { name: "Team One", value: teams.one.join(", ")},
-            { name: "Team Two", value: teams.two.join(", ")}
-        )
+        .addFields({
+            name: "Team One",
+            value: teams.one.join(", ")
+        }, {
+            name: "Team Two",
+            value: teams.two.join(", ")
+        })
         .setTimestamp()
     return embed;
 }
 
 const handleError = (err, message) => {
     console.log(err.name + err.message);
-    if(err.name === "Error [VOICE_JOIN_CHANNEL]"){
+    if (err.name === "Error [VOICE_JOIN_CHANNEL]") {
         message.channel.send("Missing Permissions, check channel or bot permissions")
     } else {
         message.channel.send("Something went wrong")
