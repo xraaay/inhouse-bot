@@ -1,12 +1,15 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const DBL = require("dblapi.js")
 require("dotenv").config()
 
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
+const dblToken = process.env.DBL_TOKEN
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const dbl = new DBL(dblToken, client)
 
 const cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
@@ -78,3 +81,7 @@ client.once('ready', () => {
     console.log(`Used in ${guilds.length} servers`)
     console.log('Ready!');
 });
+
+dbl.on('posted', () => {
+    console.log('Server count posted!');
+  })
