@@ -19,7 +19,7 @@ module.exports = {
                     })
                 })
                 .catch(err => {
-                    console.log(err)
+                    // console.log(err)
                     message.channel.send("Something went wrong")
                 })
         } else {

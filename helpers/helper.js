@@ -11,8 +11,8 @@ const createTeamChannels = (message, team, name) => {
             parent: message.member.voice.channel.parentID
         })
         .then(res => {
-            console.log("Created Voice ID: " + res.id)
-            console.log("Guild ID: " + res.guild.id)
+            // console.log("Created Voice ID: " + res.id)
+            // console.log("Guild ID: " + res.guild.id)
 
             movePlayers(message, res, team)
             handleTempChannel(message, res)
@@ -59,7 +59,7 @@ const handleCollectPlayers = (message, args) => {
             })
 
             collection.on('collect', (reaction, user) => {
-                console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
+                // console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
                 if (!memberArr.includes(user)) {
                     memberArr.push(user);
                 }
