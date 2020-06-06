@@ -36,6 +36,10 @@ const movePlayers = (message, res, team) => {
     team.forEach(item => {
         let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
         member.setChannel(res.id)
+            .catch(err => {
+                console.log("movePlayers")
+                handleError(err, message)
+            })
     })
 }
 
@@ -134,8 +138,8 @@ const handleMessageEmbed = (host, teams, playerNumber) => {
 }
 
 const handleError = (err, message) => {
-    console.log(err.name + err.message);
-    if (err.name === "Error [VOICE_JOIN_CHANNEL]") {
+    console.log(err.name + " - " + err.message);
+    if (err.name === "Error [VOICE_JOIN_CHANNEL]" || err.message.includes("Permissions")) {
         message.channel.send("Missing Permissions, check channel or bot permissions")
     } else {
         message.channel.send("Something went wrong")
