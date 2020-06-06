@@ -57,7 +57,7 @@ const handleCollectPlayers = (message, args) => {
             };
 
             let collection = msg.createReactionCollector(memberFilter, {
-                time: 30000,
+                time: 60000,
                 max: playerNumber
             })
 
