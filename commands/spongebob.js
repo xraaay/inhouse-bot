@@ -20,7 +20,7 @@ module.exports = {
                     })
                 })
                 .catch(err => {
-                    console.log("spongebob")
+                    console.log("Executed Spongebob in " + message.guild.name)
                     handleError(err, message)
                 })
         } else {
