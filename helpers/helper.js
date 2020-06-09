@@ -141,6 +141,8 @@ const handleError = (err, message) => {
     console.log(err.name + " - " + err.message);
     if (err.name === "Error [VOICE_JOIN_CHANNEL]" || err.message.includes("Permissions")) {
         message.channel.send("Missing Permissions, check channel or bot permissions")
+    } else if (err.message.includes("setChannel")) {
+        message.channel.send("Error setting channel of user, make sure all users are connected to a voice channel")
     } else {
         message.channel.send("Something went wrong")
     }
