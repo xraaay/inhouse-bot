@@ -6,7 +6,7 @@ const Discord = require("discord.js")
 
 
 const createTeamChannels = (message, team, name) => {
-    message.guild.channels.create(name, {
+    return message.guild.channels.create(name, {
             type: "voice",
             parent: message.member.voice.channel.parentID
         })
@@ -35,7 +35,7 @@ const handleTempChannel = (message, res) => {
 const movePlayers = (message, res, team) => {
     team.forEach(item => {
         let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
-        member.setChannel(res.id)
+        return member.setChannel(res.id)
             .catch(err => {
                 console.log("movePlayers")
                 handleError(err, message)
@@ -53,7 +53,7 @@ const handleCollectPlayers = (message, args) => {
     }
 
     message.reply(`is looking for an inhouse for ${playerNumber} people`)
-    message.channel.send("React with a thumbs up to opt in")
+    return message.channel.send("React with a thumbs up to opt in")
         .then(msg => {
             msg.react("👍")
             const memberFilter = (reaction, user) => {
@@ -93,7 +93,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
     let teams = splitArray(shuffledArr);
     let response = handleMessageEmbed(host, teams, playerNumber)
     message.channel.send(response)
-    message.reply("react with 👍 to confirm or 👎 to reshuffle")
+    return message.reply("react with 👍 to confirm or 👎 to reshuffle")
         .then(msg => {
             msg.react("👍")
             msg.react("👎")
@@ -139,13 +139,17 @@ const handleMessageEmbed = (host, teams, playerNumber) => {
 
 const handleError = (err, message) => {
     console.log(err.name + " - " + err.message);
+    let errorMessage;
     if (err.name === "Error [VOICE_JOIN_CHANNEL]" || err.message.includes("Permissions")) {
-        message.channel.send("Missing Permissions, check channel or bot permissions")
+        errorMessage = "Missing Permissions, check channel or bot permissions"
     } else if (err.message.includes("setChannel")) {
-        message.channel.send("Error setting channel of user, make sure all users are connected to a voice channel")
+        errorMessage = "Error setting channel of user, make sure all users are connected to the same voice channel"
+    } else if (err.message.includes("Unknown")) {
+        errorMessage = "Unknown Channel, make sure all users are connected to the same voice channel"
     } else {
-        message.channel.send("Something went wrong")
+        errorMessage = "Something went wrong - " + err.message
     }
+    return message.channel.send(errorMessage)
 }
 
 module.exports = {
