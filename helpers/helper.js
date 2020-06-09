@@ -14,8 +14,8 @@ const createTeamChannels = (message, team, name) => {
             console.log("Created Voice ID: " + res.id)
             console.log("Guild ID: " + res.guild.id)
 
-            movePlayers(message, res, team)
             handleTempChannel(message, res)
+            movePlayers(message, res, team)
         })
         .catch(err => {
             console.log("createTeamChannels")
@@ -143,14 +143,15 @@ const handleError = (err, message) => {
     if (err.name === "Error [VOICE_JOIN_CHANNEL]" || err.message.includes("Permissions")) {
         errorMessage = "Missing Permissions, check channel or bot permissions"
     } else if (err.message.includes("setChannel")) {
-        errorMessage = "Error setting channel of user, make sure all users are connected to the same voice channel"
+        errorMessage = "Error setting channel of user, make sure all users are connected to a voice channel"
     } else if (err.message.includes("Unknown")) {
-        errorMessage = "Unknown Channel, make sure all users are connected to the same voice channel"
+        errorMessage = "Unknown Channel, make sure all users are connected to a voice channel"
     } else if (err.message.includes("not connected to voice")){
-        errorMessage = "Error finding user. Make sure all players are connected to voice"
+        errorMessage = "Error finding user. Make sure all players are connected to a voice channel"
     } else {
         errorMessage = "Something went wrong - " + err.message
     }
+    console.log(errorMessage)
     return message.channel.send(errorMessage)
 }
 
