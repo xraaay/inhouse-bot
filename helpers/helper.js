@@ -146,6 +146,8 @@ const handleError = (err, message) => {
         errorMessage = "Error setting channel of user, make sure all users are connected to the same voice channel"
     } else if (err.message.includes("Unknown")) {
         errorMessage = "Unknown Channel, make sure all users are connected to the same voice channel"
+    } else if (err.message.includes("not connected to voice")){
+        errorMessage = "Error finding user. Make sure all players are connected to voice"
     } else {
         errorMessage = "Something went wrong - " + err.message
     }
