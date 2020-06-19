@@ -6,6 +6,7 @@ const Discord = require("discord.js")
 
 
 const createTeamChannels = (message, team, name) => {
+    console.log("start create team channels")
     return message.guild.channels.create(name, {
             type: "voice",
             parent: message.member.voice.channel.parentID
@@ -24,6 +25,7 @@ const createTeamChannels = (message, team, name) => {
 }
 
 const handleTempChannel = (message, res) => {
+    console.log("start handle temp channel")
     let teamChannel = message.client.setInterval(function () {
         if (res.members.size === 0) {
             res.delete();
@@ -33,7 +35,9 @@ const handleTempChannel = (message, res) => {
 }
 
 const movePlayers = (message, res, team) => {
+    console.log("start move players")
     team.forEach(item => {
+        console.log("move players loop", item)
         let member = message.member.guild.voiceStates.cache.find(user => item.id == user.id)
         return member.setChannel(res.id)
             .catch(err => {
@@ -61,7 +65,7 @@ const handleCollectPlayers = (message, args) => {
             };
 
             let collection = msg.createReactionCollector(memberFilter, {
-                time: 60000,
+                time: 120000,
                 max: playerNumber
             })
 
@@ -73,11 +77,14 @@ const handleCollectPlayers = (message, args) => {
             })
 
             collection.on('end', () => {
+                console.log("reaction collect end")
                 if (memberArr.length < playerNumber) {
+                    console.log("not enough players error")
                     message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
                 } else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
                 } else {
+                    console.log("unable to start error")
                     message.channel.send("Unable to start... Teams are uneven")
                 }
             })
@@ -89,6 +96,7 @@ const handleCollectPlayers = (message, args) => {
 }
 
 const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
+    console.log("start team shuffle")
     let shuffledArr = shuffleArray(memberArr)
     let teams = splitArray(shuffledArr);
     let response = handleMessageEmbed(host, teams, playerNumber)
@@ -106,6 +114,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
             })
 
             collection.on('collect', (reaction) => {
+                console.log("confirmed teams")
                 if (reaction.emoji.name === '👍') {
                     createTeamChannels(message, teams.one, "Team One");
                     createTeamChannels(message, teams.two, "Team Two");
@@ -121,6 +130,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
 }
 
 const handleMessageEmbed = (host, teams, playerNumber) => {
+    console.log("handleMessageEmbed:start")
     if (!teams.one[0] || !teams.two[0]) return
     const embed = new Discord.MessageEmbed()
         .setColor("#00ffff")
