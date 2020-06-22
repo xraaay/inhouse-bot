@@ -84,4 +84,8 @@ client.once('ready', () => {
 
 dbl.on('posted', () => {
     console.log('Server count posted!');
-  })
+})
+
+dbl.on('error', e=> {
+    console.log("DBL_Error: " + e)
+})
