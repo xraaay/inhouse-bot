@@ -77,7 +77,7 @@ client.on("guildCreate", guild => {
 client.once('ready', () => {
     client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
     let guilds = client.guilds.cache.map(item => item.name)
-    console.log(guilds)
+    // console.log(guilds)
     console.log(`Used in ${guilds.length} servers`)
     console.log('Ready!');
 });
