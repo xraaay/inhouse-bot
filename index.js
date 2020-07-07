@@ -82,6 +82,10 @@ client.once('ready', () => {
     console.log('Ready!');
 });
 
+process.on('unhandledRejection', err => {
+    console.log('Unhandled promise rejection', error);
+})
+
 dbl.on('posted', () => {
     console.log('Server count posted!');
 })
