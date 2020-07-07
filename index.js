@@ -86,10 +86,6 @@ process.on('unhandledRejection', err => {
     console.log('Unhandled promise rejection', error);
 })
 
-dbl.on('posted', () => {
-    console.log('Server count posted!');
-})
-
 dbl.on('error', e=> {
     console.log("DBL_Error: " + e)
 })
