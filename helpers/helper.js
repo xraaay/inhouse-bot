@@ -93,8 +93,8 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
     let shuffledArr = shuffleArray(memberArr)
     let teams = splitArray(shuffledArr);
     let response = handleMessageEmbed(host, teams, playerNumber)
-    message.channel.send(response)
-    return message.reply("react with 👍 to confirm or 👎 to reshuffle")
+    return message.channel.send(response)
+        .then(res => message.reply("react with 👍 to confirm or 👎 to reshuffle"))
         .then(msg => {
             msg.react("👍")
             msg.react("👎")
@@ -141,7 +141,7 @@ const handleMessageEmbed = (host, teams, playerNumber) => {
 const handleError = (err, message) => {
     console.log(err.name + " - " + err.message);
     let errorMessage;
-    if (err.name === "Error [VOICE_JOIN_CHANNEL]" || err.message.includes("Permissions")) {
+    if (err.name === "Error [VOICE_JOIN_CHANNEL]" || err.message.includes("Permissions") || err.message.includes('Missing Access')) {
         errorMessage = "Missing Permissions, check channel or bot permissions"
     } else if (err.message.includes("setChannel")) {
         errorMessage = "Error setting channel of user, make sure all users are connected to a voice channel"
