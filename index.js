@@ -82,10 +82,10 @@ client.once('ready', () => {
     console.log('Ready!');
 });
 
-dbl.on('posted', () => {
-    console.log('Server count posted!');
-})
+// dbl.on('posted', () => {
+//     // console.log('Server count posted!');
+// })
 
-dbl.on('error', e=> {
-    console.log("DBL_Error: " + e)
-})
+// dbl.on('error', e=> {
+//     console.log("DBL_Error: " + e)
+// })
