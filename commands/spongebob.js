@@ -8,13 +8,13 @@ module.exports = {
     description: 'Plays a random spongebob quote',
     args: false,
     async execute(message) {
-        if(message.member.voice.channel){
-            let videoNumber = randomInteger(0, urls.length-1)
+        if (message.member.voice.channel) {
+            let videoNumber = randomInteger(0, urls.length - 1)
             console.log(videoNumber)
             console.log(urls[videoNumber])
-            message.member.voice.channel.join()
+            return message.member.voice.channel.join()
                 .then(connection => {
-                    const dispatcher = connection.play(ytdl(urls[videoNumber], { filter: "audioonly"}), { volume: 0.2 })
+                    const dispatcher = connection.play(ytdl(urls[videoNumber], { filter: "audioonly" }), { volume: 0.2 })
                     dispatcher.on("finish", () => {
                         connection.disconnect()
                     })
@@ -25,6 +25,10 @@ module.exports = {
                 })
         } else {
             message.reply("You need to be in a voice channel")
+                .catch(err => {
+                    console.log("spongebob")
+                    handleError(err, message)
+                })
         }
     }
 }

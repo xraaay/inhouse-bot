@@ -7,6 +7,7 @@ require("dotenv").config()
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
 const dblToken = process.env.DBL_TOKEN
+const { handleError } = require("./helpers/helper")
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -34,6 +35,10 @@ client.on('message', message => {
     //check arguments
     if (command.args && !args.length) {
         return message.channel.send(`No arguments`)
+            .catch(err => {
+                console.log("onMessage")
+                handleError(err, message)
+            })
     }
 
     //check cooldown
@@ -43,14 +48,18 @@ client.on('message', message => {
     const timestamps = cooldowns.get(command.name);
     const now = Date.now();
     const cooldownAmount = (command.cooldown || 3) * 1000;
-    
+
     if (timestamps.has(message.author.id)) {
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
+                return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
+                    .catch(err => {
+                        console.log("onMessage")
+                        handleError(err, message)
+                    })
             }
         }
 
@@ -63,7 +72,11 @@ client.on('message', message => {
         command.execute(message, args);
     } catch (error) {
         console.error(error)
-        message.reply("There was an error executing that command")
+        return message.reply("There was an error executing that command")
+            .catch(err => {
+                console.log("onMessage")
+                handleError(err, message)
+            })
     }
 })
 
@@ -72,6 +85,10 @@ client.on("guildCreate", guild => {
         return channel.type === 'text' && channel.permissionsFor(guild.me).has(['VIEW_CHANNEL', 'SEND_MESSAGES']);
     });
     return channel.send(`Thanks for inviting me into this server! You can get a list of my commands with ${prefix}help or you can start an inhouse with #inhouse [player number]. If you like this bot please give it a vote at https://top.gg/bot/708468694816391248 !`)
+        .catch(err => {
+            console.log("guildCreate")
+            handleError(err)
+        })
 });
 
 client.once('ready', () => {
