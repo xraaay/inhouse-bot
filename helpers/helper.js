@@ -19,7 +19,7 @@ const createTeamChannels = (message, team, name) => {
         })
         .catch(err => {
             console.log("createTeamChannels")
-            return handleError(err, message)
+            handleError(err, message)
         })
 }
 
@@ -38,7 +38,7 @@ const movePlayers = (message, res, team) => {
         return member.setChannel(res.id)
             .catch(err => {
                 console.log("movePlayers")
-                return handleError(err, message)
+                handleError(err, message)
             })
     })
 }
@@ -52,8 +52,8 @@ const handleCollectPlayers = (message, args) => {
         return message.reply("must be a valid player number")
     }
 
-    return message.reply(`is looking for an inhouse for ${playerNumber} people`)
-        .then(res => message.channel.send("React with a thumbs up to opt in"))
+    message.reply(`is looking for an inhouse for ${playerNumber} people`)
+    return message.channel.send("React with a thumbs up to opt in")
         .then(msg => {
             msg.react("👍")
 
@@ -73,27 +73,19 @@ const handleCollectPlayers = (message, args) => {
                 }
             })
 
-            return collection.on('end', () => {
+            collection.on('end', () => {
                 if (memberArr.length < playerNumber) {
                     message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
-                    .catch(err => {
-                        console.log("handleCollectPlayers")
-                        return handleError(err, message)
-                    })
                 } else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
                 } else {
                     message.channel.send("Unable to start... Teams are uneven")
-                    .catch(err => {
-                        console.log("handleCollectPlayers")
-                        return handleError(err, message)
-                    })
                 }
             })
         })
         .catch(err => {
             console.log("handleCollectPlayers")
-            return handleError(err, message)
+            handleError(err, message)
         })
 }
 
@@ -114,7 +106,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
                 max: 1
             })
 
-            return collection.on('collect', (reaction) => {
+            collection.on('collect', (reaction) => {
                 if (reaction.emoji.name === '👍') {
                     createTeamChannels(message, teams.one, "Team One");
                     createTeamChannels(message, teams.two, "Team Two");
@@ -125,7 +117,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
         })
         .catch(err => {
             console.log("handleTeamShuffle")
-            return handleError(err, message)
+            handleError(err, message)
         })
 }
 

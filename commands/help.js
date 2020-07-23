@@ -1,5 +1,3 @@
-const { handleError } = require("../helpers/helper")
-
 module.exports = {
     name: "help",
     description: "Gives a list of commands or information about a command",
@@ -11,11 +9,7 @@ module.exports = {
         const commands = message.client.commands
         let commandList = commands.map(command => "**" + process.env.PREFIX + command.name + "**").join(", ")
         if (!args.length) {
-            return message.reply(`here's a list of my commands: ${commandList}, try ${process.env.PREFIX}help [command name] for more info`)
-                .catch(err => {
-                    console.log("help")
-                    handleError(err, message)
-                })
+            message.reply(`here's a list of my commands: ${commandList}, try ${process.env.PREFIX}help [command name] for more info`)
         } else {
             let name = args[0].toLowerCase();
             const data = [];
@@ -28,11 +22,7 @@ module.exports = {
             if (command.description) data.push(`**Description:** ${command.description}`);
             if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
 
-            return message.channel.send(data, { split: true })
-                .catch(err => {
-                    console.log("help")
-                    handleError(err, message)
-                })
+            message.channel.send(data, { split: true })
         }
     }
 }

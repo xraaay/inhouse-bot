@@ -11,13 +11,9 @@ module.exports = {
 
         if (message.member.voice.channel) {
             console.log(`Executed Inhouse in ${message.guild.name} for ${args} players`)
-            return handleCollectPlayers(message, args)
+            handleCollectPlayers(message, args)
         } else {
-            return message.channel.send("You must be in a voice channel to use this feature")
-            .catch(err => {
-                console.log("inhouse")
-                handleError(err, message)
-            })
+            message.channel.send("You must be in a voice channel to use this feature")
         }
     },
 };
