@@ -7,9 +7,9 @@ const Discord = require("discord.js")
 
 const createTeamChannels = (message, team, name) => {
     return message.guild.channels.create(name, {
-        type: "voice",
-        parent: message.member.voice.channel.parentID
-    })
+            type: "voice",
+            parent: message.member.voice.channel.parentID
+        })
         .then(res => {
             console.log("Created Voice ID: " + res.id)
             console.log("Guild ID: " + res.guild.id)
@@ -52,10 +52,11 @@ const handleCollectPlayers = (message, args) => {
         return message.reply("must be a valid player number")
     }
 
-    return message.reply(`is looking for an inhouse for ${playerNumber} people`)
-        .then(msg => msg.channel.send("React with a thumbs up to opt in"))
-        .then(msg => msg.react("👍"))
+    message.reply(`is looking for an inhouse for ${playerNumber} people`)
+    return message.channel.send("React with a thumbs up to opt in")
         .then(msg => {
+            msg.react("👍")
+
             const memberFilter = (reaction, user) => {
                 return ['👍'].includes(reaction.emoji.name) && !user.bot;
             };
@@ -75,18 +76,10 @@ const handleCollectPlayers = (message, args) => {
             collection.on('end', () => {
                 if (memberArr.length < playerNumber) {
                     message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
-                        .catch(err => {
-                            console.log("notEnoughPlayers")
-                            handleError(err, message)
-                        })
                 } else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
                 } else {
                     message.channel.send("Unable to start... Teams are uneven")
-                        .catch(err => {
-                            console.log("unevenTeams")
-                            handleError(err, message)
-                        })
                 }
             })
         })
@@ -95,15 +88,16 @@ const handleCollectPlayers = (message, args) => {
             handleError(err, message)
         })
 }
+
 const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
     let shuffledArr = shuffleArray(memberArr)
     let teams = splitArray(shuffledArr);
     let response = handleMessageEmbed(host, teams, playerNumber)
     return message.channel.send(response)
         .then(res => message.reply("react with 👍 to confirm or 👎 to reshuffle"))
-        .then(msg => msg.react("👍"))
-        .then(msg => msg.react("👎"))
         .then(msg => {
+            msg.react("👍")
+            msg.react("👎")
             const shuffleFilter = (reaction, user) => {
                 return ['👍', '👎'].includes(reaction.emoji.name) && user.id === host.id;
             };
@@ -153,7 +147,7 @@ const handleError = (err, message) => {
         errorMessage = "Error setting channel of user, make sure all users are connected to a voice channel"
     } else if (err.message.includes("Unknown")) {
         errorMessage = "Unknown Channel, make sure all users are connected to a voice channel"
-    } else if (err.message.includes("not connected to voice")) {
+    } else if (err.message.includes("not connected to voice")){
         errorMessage = "Error finding user. Make sure all players are connected to a voice channel"
     } else {
         errorMessage = "Something went wrong - " + err.message
