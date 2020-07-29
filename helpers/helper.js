@@ -7,9 +7,9 @@ const Discord = require("discord.js")
 
 const createTeamChannels = (message, team, name) => {
     return message.guild.channels.create(name, {
-            type: "voice",
-            parent: message.member.voice.channel.parentID
-        })
+        type: "voice",
+        parent: message.member.voice.channel.parentID
+    })
         .then(res => {
             console.log("Created Voice ID: " + res.id)
             console.log("Guild ID: " + res.guild.id)
@@ -76,10 +76,18 @@ const handleCollectPlayers = (message, args) => {
             collection.on('end', () => {
                 if (memberArr.length < playerNumber) {
                     message.channel.send(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`)
+                        .catch(err => {
+                            console.log("not enough players")
+                            handleError(err, message)
+                        })
                 } else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
                 } else {
                     message.channel.send("Unable to start... Teams are uneven")
+                        .catch(err => {
+                            console.log("uneven teams")
+                            handleError(err, message)
+                        })
                 }
             })
         })
@@ -147,7 +155,7 @@ const handleError = (err, message) => {
         errorMessage = "Error setting channel of user, make sure all users are connected to a voice channel"
     } else if (err.message.includes("Unknown")) {
         errorMessage = "Unknown Channel, make sure all users are connected to a voice channel"
-    } else if (err.message.includes("not connected to voice")){
+    } else if (err.message.includes("not connected to voice")) {
         errorMessage = "Error finding user. Make sure all players are connected to a voice channel"
     } else {
         errorMessage = "Something went wrong - " + err.message
