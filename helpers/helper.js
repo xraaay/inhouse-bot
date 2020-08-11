@@ -62,7 +62,7 @@ const handleCollectPlayers = (message, args) => {
             };
 
             let collection = msg.createReactionCollector(memberFilter, {
-                time: 120000,
+                time: 180000,
                 max: playerNumber
             })
 
@@ -110,7 +110,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
                 return ['👍', '👎'].includes(reaction.emoji.name) && user.id === host.id;
             };
             let collection = msg.createReactionCollector(shuffleFilter, {
-                time: 60000,
+                time: 120000,
                 max: 1
             })
 
