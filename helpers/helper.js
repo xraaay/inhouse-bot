@@ -3,13 +3,14 @@ const {
     splitArray
 } = require("../helpers/reuseableFunctions")
 const Discord = require("discord.js")
+const maps = require("./maps")
 
 
 const createTeamChannels = (message, team, name) => {
     return message.guild.channels.create(name, {
-        type: "voice",
-        parent: message.member.voice.channel.parentID
-    })
+            type: "voice",
+            parent: message.member.voice.channel.parentID
+        })
         .then(res => {
             console.log("Created Voice ID: " + res.id)
             console.log("Guild ID: " + res.guild.id)
@@ -100,7 +101,7 @@ const handleCollectPlayers = (message, args) => {
 const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
     let shuffledArr = shuffleArray(memberArr)
     let teams = splitArray(shuffledArr);
-    let response = handleMessageEmbed(host, teams, playerNumber)
+    let response = handleInhouseMessageEmbed(host, teams, playerNumber)
     return message.channel.send(response)
         .then(res => message.reply("react with 👍 to confirm or 👎 to reshuffle"))
         .then(msg => {
@@ -114,10 +115,13 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
                 max: 1
             })
 
-            collection.on('collect', (reaction) => {
+            collection.on('collect', async (reaction) => {
                 if (reaction.emoji.name === '👍') {
-                    createTeamChannels(message, teams.one, "Team One");
-                    createTeamChannels(message, teams.two, "Team Two");
+                    // TODO: handleMapBan 
+                    let captains = [teams.one[0], teams.two[0]]
+                    await handleMapBan(message, captains)
+                    // createTeamChannels(message, teams.one, "Team One");
+                    // createTeamChannels(message, teams.two, "Team Two");
                 } else if (reaction.emoji.name === '👎') {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
                 }
@@ -129,7 +133,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
         })
 }
 
-const handleMessageEmbed = (host, teams, playerNumber) => {
+const handleInhouseMessageEmbed = (host, teams, playerNumber) => {
     if (!teams.one[0] || !teams.two[0]) return
     const embed = new Discord.MessageEmbed()
         .setColor("#00ffff")
@@ -141,6 +145,102 @@ const handleMessageEmbed = (host, teams, playerNumber) => {
         }, {
             name: "Team Two",
             value: teams.two.join(", ")
+        })
+        .setTimestamp()
+    return embed;
+}
+
+let gamesArr = [{
+        name: 'CSGO',
+        emoji: '🍆',
+        maps: ['Inferno', 'Train', 'Mirage', 'Nuke', 'Overpass', 'Dust II', 'Vertigo']
+    },
+    {
+        name: 'Valorant',
+        emoji: '🍑',
+        maps: ['Ascent', 'Haven', 'Split', 'Bind']
+    },
+]
+
+const handleMapBan = (message, captains) => {
+    return message.reply("would you like to ban maps? \n 🍆:CSGO, 🍑:Valorant, ❌:Continue")
+        .then(msg => {
+            msg.react("🍆")
+            msg.react("🍑")
+            msg.react("❌")
+
+            let reactions = ["🍆", "🍑", "❌"];
+
+            const gameFilter = (reaction, user) => {
+                return reactions.includes(reaction.emoji.name) &&
+                    user.id === message.author.id;
+            }
+
+            let collection = msg.createReactionCollector(gameFilter, {
+                time: 60000,
+                max: 1
+            })
+
+            collection.on('collect', reaction => {
+                let choice = reactions.findIndex(item => item === reaction.emoji.name)
+                const game = gamesArr[choice];
+                console.log(choice);
+                banMaps(message, game, captains)
+            })
+        })
+        .catch(err => {
+            console.log("handleMapBan")
+            handleError(err, message)
+        })
+}
+
+
+const banMaps = (message, game, captains, turn = 0) => {
+    let i = turn % 2
+    let currentCap = captains[i];
+    let embed = handleMapBanEmbed(game.maps, currentCap)
+    return message.channel.send(embed)
+        .then(msg => {
+            let num = ["1⃣", '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
+            let reactions = [];
+            for (let i = 0; i < game.maps.length; i++) {
+                reactions.push(num[i])
+                msg.react(`${num[i]}`)
+            }
+
+            const banFilter = (reaction, user) => {
+                return reactions.includes(reaction.emoji.name) 
+                    // && user.id === message.author.id
+                    && user.id === currentCap.id;
+            }
+
+            let collection = msg.createReactionCollector(banFilter, {
+                time: 60000,
+                max: 1
+            })
+
+            collection.on('collect', (reaction) => {
+                // console.log(reaction.emoji.name);
+                let banned = num.findIndex(item => item === reaction.emoji.name);
+                game.maps.splice(banned, 1);
+                console.log(turn);
+                banMaps(message, game, captains, turn + 1)
+            })
+        })
+        .catch(err => {
+            console.log("handleMapBan")
+            handleError(err, message)
+        })
+}
+
+const handleMapBanEmbed = (maps, captain) => {
+    const embed = new Discord.MessageEmbed()
+        .setColor('#0077ff')
+        .setTitle(`Map Ban`)
+        .setAuthor(captain.username, `https://cdn.discordapp.com/avatars/${captain.id}/${captain.avatar}.png`)
+        .addFields({
+            name: "Maps",
+            value: maps.map((item, index) => `${index + 1}. ${item}`)
         })
         .setTimestamp()
     return embed;
@@ -165,6 +265,8 @@ const handleError = (err, message) => {
 }
 
 module.exports = {
+    handleMapBanEmbed,
     handleCollectPlayers,
-    handleError
+    handleError,
+    handleMapBan
 }

@@ -21,7 +21,7 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-client.on('message', message => {
+client.on('message', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
@@ -55,12 +55,12 @@ client.on('message', message => {
         }
 
     }
-    timestamps.set(message.author.id, now);
-    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    // timestamps.set(message.author.id, now);
+    // setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
     //try execute
     try {
-        command.execute(message, args);
+        await command.execute(message, args);
     } catch (error) {
         console.error(error)
         message.reply("There was an error executing that command")
