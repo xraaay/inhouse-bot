@@ -115,13 +115,11 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
                 max: 1
             })
 
-            collection.on('collect', async (reaction) => {
+            collection.on('collect', (reaction) => {
                 if (reaction.emoji.name === '👍') {
                     // TODO: handleMapBan 
                     let captains = [teams.one[0], teams.two[0]]
-                    await handleMapBan(message, captains)
-                    // createTeamChannels(message, teams.one, "Team One");
-                    // createTeamChannels(message, teams.two, "Team Two");
+                    handleMapBan(message, captains, teams)
                 } else if (reaction.emoji.name === '👎') {
                     handleTeamShuffle(message, host, memberArr, playerNumber)
                 }
@@ -156,13 +154,13 @@ let gamesArr = [{
         maps: ['Inferno', 'Train', 'Mirage', 'Nuke', 'Overpass', 'Dust II', 'Vertigo']
     },
     {
-        name: 'Valorant',
+        name: 'VALORANT',
         emoji: '🍑',
         maps: ['Ascent', 'Haven', 'Split', 'Bind']
     },
 ]
 
-const handleMapBan = (message, captains) => {
+const handleMapBan = (message, captains, teams) => {
     return message.reply("would you like to ban maps? \n 🍆:CSGO, 🍑:Valorant, ❌:Continue")
         .then(msg => {
             msg.react("🍆")
@@ -181,11 +179,17 @@ const handleMapBan = (message, captains) => {
                 max: 1
             })
 
-            collection.on('collect', reaction => {
+            collection.on('collect', async reaction => {
                 let choice = reactions.findIndex(item => item === reaction.emoji.name)
-                const game = gamesArr[choice];
-                console.log(choice);
-                banMaps(message, game, captains)
+                if(choice === reactions.length - 1){
+                    message.channel.send("Enjoy your game!")
+                    createTeamChannels(message, teams.one, "Team One");
+                    createTeamChannels(message, teams.two, "Team Two");
+                } else {
+                    const game = gamesArr[choice];
+                    console.log(choice);
+                    await banMaps(message, game, captains, teams )
+                }
             })
         })
         .catch(err => {
@@ -195,12 +199,12 @@ const handleMapBan = (message, captains) => {
 }
 
 
-const banMaps = (message, game, captains, turn = 0) => {
+const banMaps = (message, game, captains, teams, turn = 0) => {
     let i = turn % 2
     let currentCap = captains[i];
-    let embed = handleMapBanEmbed(game.maps, currentCap)
+    let embed = mapBanEmbed(game.maps, currentCap, message, teams)
     return message.channel.send(embed)
-        .then(msg => {
+        .then(async msg => {
             let num = ["1⃣", '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
             let reactions = [];
             for (let i = 0; i < game.maps.length; i++) {
@@ -219,12 +223,36 @@ const banMaps = (message, game, captains, turn = 0) => {
                 max: 1
             })
 
-            collection.on('collect', (reaction) => {
+            await collection.on('collect', async (reaction) => {
                 // console.log(reaction.emoji.name);
                 let banned = num.findIndex(item => item === reaction.emoji.name);
                 game.maps.splice(banned, 1);
                 console.log(turn);
-                banMaps(message, game, captains, turn + 1)
+                if(game.maps.length === 1){
+                    let embed = gameEmbed(game.name, game.maps[0], message, teams)
+                    return message.channel.send(embed)
+                        .then(msg => {
+                            msg.react('👍')
+
+                            const readyFilter = (reaction, user) => {
+                                return ['👍'].includes(reaction.emoji.name)
+                                    && message.author.id === user.id
+                            }
+
+                            let collection = msg.createReactionCollector(readyFilter, {
+                                time: 120000,
+                                max: 1
+                            })
+
+                            collection.on('collect', () => {
+                                message.channel.send("Enjoy your game!")
+                                createTeamChannels(message, teams.one, "Team One");
+                                createTeamChannels(message, teams.two, "Team Two");
+                            })
+                        })
+                } else {
+                    await banMaps(message, game, captains, teams, ++turn)
+                }
             })
         })
         .catch(err => {
@@ -233,17 +261,30 @@ const banMaps = (message, game, captains, turn = 0) => {
         })
 }
 
-const handleMapBanEmbed = (maps, captain) => {
-    const embed = new Discord.MessageEmbed()
+const gameEmbed = (game, map, message, teams) => {
+    return new Discord.MessageEmbed()
+        .setColor('#2bff00')
+        .setTitle(`${game} game on ${map}`)
+        .addFields({
+            name: teams.one[0].username + "'s team",
+            value: teams.one.join(", ")
+        }, {
+            name: teams.two[0].username + "'s team",
+            value: teams.two.join(", ")
+        })
+        .setFooter('Thumbs up to start game')
+        .setTimestamp()
+}
+
+const mapBanEmbed = (maps, captain) => {
+    return new Discord.MessageEmbed()
         .setColor('#0077ff')
-        .setTitle(`Map Ban`)
+        .setTitle(`${captain.username}'s turn`)
         .setAuthor(captain.username, `https://cdn.discordapp.com/avatars/${captain.id}/${captain.avatar}.png`)
         .addFields({
             name: "Maps",
             value: maps.map((item, index) => `${index + 1}. ${item}`)
         })
-        .setTimestamp()
-    return embed;
 }
 
 const handleError = (err, message) => {
@@ -265,7 +306,7 @@ const handleError = (err, message) => {
 }
 
 module.exports = {
-    handleMapBanEmbed,
+    handleMapBanEmbed: mapBanEmbed,
     handleCollectPlayers,
     handleError,
     handleMapBan
