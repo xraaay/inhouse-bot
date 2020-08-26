@@ -85,7 +85,7 @@ client.once('ready', () => {
         }
     })
 
-    console.log(guilds)
+    console.log(JSON.stringify(guilds))
     console.log("Member count: " + memCount)
     console.log(`Server count: ${guilds.length}`)
     console.log('Ready!');
