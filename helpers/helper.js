@@ -3,7 +3,7 @@ const {
     splitArray
 } = require("../helpers/reuseableFunctions")
 const Discord = require("discord.js")
-const maps = require("./maps")
+// const maps = require("./maps")
 
 
 const createTeamChannels = (message, team, name) => {
@@ -308,8 +308,6 @@ const handleError = (err, message) => {
 }
 
 module.exports = {
-    handleMapBanEmbed: mapBanEmbed,
     handleCollectPlayers,
     handleError,
-    handleMapBan
 }
