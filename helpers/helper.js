@@ -13,7 +13,7 @@ const createTeamChannels = (message, team, name) => {
         })
         .then(res => {
             console.log("Created Voice ID: " + res.id)
-            console.log("Guild ID: " + res.guild.id)
+            console.log("Guild ID: " + res.guild.name)
 
             handleTempChannel(message, res)
             movePlayers(message, res, team)
@@ -187,7 +187,6 @@ const handleMapBan = (message, captains, teams) => {
                     createTeamChannels(message, teams.two, "Team Two");
                 } else {
                     const game = gamesArr[choice];
-                    console.log(choice);
                     await banMaps(message, game, captains, teams )
                 }
             })
@@ -227,7 +226,6 @@ const banMaps = (message, game, captains, teams, turn = 0) => {
                 // console.log(reaction.emoji.name);
                 let banned = num.findIndex(item => item === reaction.emoji.name);
                 game.maps.splice(banned, 1);
-                console.log(turn);
                 if(game.maps.length === 1){
                     let embed = gameEmbed(game.name, game.maps[0], teams)
                     return message.channel.send(embed)
