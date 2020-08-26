@@ -77,13 +77,13 @@ client.on("guildCreate", guild => {
 client.once('ready', () => {
     client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
     let guilds = client.guilds.cache.map(item => item.name)
-    // console.log(guilds)
-    console.log(`Used in ${guilds.length} servers`)
+    console.log(JSON.stringify(guilds))
+    // console.log(`Used in ${guilds.length} servers`)
     console.log('Ready!');
 });
 
 process.on('unhandledRejection', err => {
-    console.log('Unhandled promise rejection', err);
+    console.log('unhandled promise >>>', err);
 })
 
 // dbl.on('error', e=> {
