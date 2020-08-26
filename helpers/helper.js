@@ -229,7 +229,7 @@ const banMaps = (message, game, captains, teams, turn = 0) => {
                 game.maps.splice(banned, 1);
                 console.log(turn);
                 if(game.maps.length === 1){
-                    let embed = gameEmbed(game.name, game.maps[0], message, teams)
+                    let embed = gameEmbed(game.name, game.maps[0], teams)
                     return message.channel.send(embed)
                         .then(msg => {
                             msg.react('👍')
@@ -240,7 +240,7 @@ const banMaps = (message, game, captains, teams, turn = 0) => {
                             }
 
                             let collection = msg.createReactionCollector(readyFilter, {
-                                time: 120000,
+                                time: 240000,
                                 max: 1
                             })
 
@@ -249,6 +249,10 @@ const banMaps = (message, game, captains, teams, turn = 0) => {
                                 createTeamChannels(message, teams.one, "Team One");
                                 createTeamChannels(message, teams.two, "Team Two");
                             })
+                        })
+                        .catch(err => {
+                            console.log("handleMapBan")
+                            handleError(err, message)
                         })
                 } else {
                     await banMaps(message, game, captains, teams, ++turn)
@@ -261,7 +265,7 @@ const banMaps = (message, game, captains, teams, turn = 0) => {
         })
 }
 
-const gameEmbed = (game, map, message, teams) => {
+const gameEmbed = (game, map, teams) => {
     return new Discord.MessageEmbed()
         .setColor('#2bff00')
         .setTitle(`${game} game on ${map}`)
