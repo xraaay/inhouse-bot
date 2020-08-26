@@ -76,9 +76,18 @@ client.on("guildCreate", guild => {
 
 client.once('ready', () => {
     client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
-    let guilds = client.guilds.cache.map(item => item.name)
-    console.log(JSON.stringify(guilds))
-    // console.log(`Used in ${guilds.length} servers`)
+    let memCount = 0;
+    let guilds = client.guilds.cache.map(item => {
+        memCount += item.memberCount
+        return {
+            name: item.name,
+            members: item.memberCount
+        }
+    })
+
+    console.log(guilds)
+    console.log("Member count: " + memCount)
+    console.log(`Server count: ${guilds.length}`)
     console.log('Ready!');
 });
 
