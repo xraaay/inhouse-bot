@@ -79,10 +79,10 @@ client.once('ready', () => {
     let memCount = 0;
     let guilds = client.guilds.cache.map(item => {
         memCount += item.memberCount
-        return {
-            name: item.name.replace(`"`, "'" ),
-            members: item.memberCount
-        }
+        return [
+            item.name.replace(`"`, "'" ),
+            item.memberCount
+        ]
     })
 
     console.log(JSON.stringify(guilds))
