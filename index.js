@@ -76,18 +76,18 @@ client.on("guildCreate", guild => {
 
 client.once('ready', () => {
     client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
-    let memCount = 0;
-    let guilds = client.guilds.cache.map(item => {
-        memCount += item.memberCount
-        return [
-            item.name.replace(`"`, "'" ),
-            item.memberCount
-        ]
-    })
+    // let memCount = 0;
+    // let guilds = client.guilds.cache.map(item => {
+    //     memCount += item.memberCount
+    //     return [
+    //         item.name.replace(`"`, "'" ),
+    //         item.memberCount
+    //     ]
+    // })
 
-    console.log(JSON.stringify(guilds))
-    console.log("Member count: " + memCount)
-    console.log(`Server count: ${guilds.length}`)
+    // console.log(JSON.stringify(guilds))
+    // console.log("Member count: " + memCount)
+    // console.log(`Server count: ${guilds.length}`)
     console.log('Ready!');
 });
 
