@@ -79,7 +79,6 @@ client.once('ready', () => {
     let memCount = 0;
     let guilds = client.guilds.cache.map(item => {
         memCount += item.memberCount
-        console.log(item.name)
         try { 
             name = item.name.replace('"', "'")
         } catch(ex) { 
@@ -91,7 +90,7 @@ client.once('ready', () => {
         ]
     })
 
-    // console.log(JSON.stringify(guilds))
+    console.log(JSON.stringify(guilds))
     console.log("Member count: " + memCount)
     console.log(`Server count: ${guilds.length}`)
     console.log('Ready!');
