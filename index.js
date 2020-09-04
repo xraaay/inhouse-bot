@@ -82,7 +82,7 @@ client.once('ready', () => {
             memCount += item.memberCount
         }
         
-        let name = item.name ? item.name.replace('"', "") : "error",
+        let name = item.name ? item.name.replace('"', "") : "error";
         return [
             name,
             item.memberCount
