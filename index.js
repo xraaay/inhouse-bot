@@ -79,13 +79,14 @@ client.once('ready', () => {
     let memCount = 0;
     let guilds = client.guilds.cache.map(item => {
         memCount += item.memberCount
+        let name;
         try { 
             name = item.name.replace('"', "'")
         } catch(ex) { 
             console.log(item.name, ex)
         }
         return [
-            item.name.replace(`"`, "'" ),
+            name,
             item.memberCount
         ]
     })
