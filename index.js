@@ -78,9 +78,13 @@ client.once('ready', () => {
     client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
     let memCount = 0;
     let guilds = client.guilds.cache.map(item => {
-        memCount += item.memberCount
+        if(typeof item.memberCount === 'number'){
+            memCount += item.memberCount
+        }
+        
+        let name = item.name ? item.name.replace('"', "") : "error",
         return [
-            item.name ? item.name.replace('"', "") : "error",
+            name,
             item.memberCount
         ]
     })
