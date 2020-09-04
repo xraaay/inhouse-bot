@@ -78,11 +78,11 @@ client.once('ready', () => {
     client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
     let memCount = 0;
     let guilds = client.guilds.cache.map(item => {
+        let name = item.name ? item.name.replace(/(\r\n|\n|\r)(")/gm, "") : "error"
         if(typeof item.memberCount === 'number'){
             memCount += item.memberCount
         }
         
-        let name = item.name ? item.name.replace('"', "") : "error";
         return [
             name,
             item.memberCount
