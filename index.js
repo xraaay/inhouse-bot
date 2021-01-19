@@ -88,7 +88,7 @@ client.once('ready', () => {
         ]
     })
     
-    client.user.setActivity(`${guilds.length} servers`, { type: 'LISTENING' });
+    client.user.setActivity(`${prefix}help | ${guilds.length} servers`, { type: 'LISTENING' });
     console.log(JSON.stringify(guilds))
     console.log("Member count: " + memCount)
     console.log(`Server count: ${guilds.length}`)
