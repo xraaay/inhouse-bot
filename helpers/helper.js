@@ -151,12 +151,12 @@ const handleInhouseMessageEmbed = (host, teams, playerNumber) => {
 let gamesArr = [{
         name: 'CSGO',
         emoji: '🍆',
-        maps: ['Inferno', 'Train', 'Mirage', 'Nuke', 'Overpass', 'Dust II', 'Vertigo']
+        maps: ['Inferno', 'Mirage', 'Nuke', 'Overpass', 'Dust II', 'Vertigo', 'Ancient', 'Train', 'Cache']
     },
     {
         name: 'VALORANT',
         emoji: '🍑',
-        maps: ['Ascent', 'Haven', 'Split', 'Bind']
+        maps: ['Ascent', 'Haven', 'Split', 'Bind', 'Icebox' ,'Fracture']
     },
 ]
 
