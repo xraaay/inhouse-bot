@@ -4,7 +4,7 @@ module.exports = {
     name: 'inhouse',
     description: 'Creates two temporary team voice channels and moves players into random teams',
     usage: "[optional: player count]",
-    cooldown: 45,
+    cooldown: 15,
     args: false,
     execute(message, args) {
         if (!message.guild) return;
