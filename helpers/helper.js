@@ -158,16 +158,33 @@ let gamesArr = [{
         emoji: '🍑',
         maps: ['Ascent', 'Haven', 'Split', 'Bind', 'Icebox' ,'Fracture']
     },
+    {
+        name: 'Heroes of the Storm',
+        emoji: '🍌',
+        maps: [
+            'Alterac Pass',
+            'Battlefield of Eternity',
+            'Braxis Holdout',
+            'Cursed Hollow',
+            'Dragon Shire',
+            'Infernal Shrines',
+            'Sky Temple',
+            'Tomb of the Spider Queen',
+            'Towers of Doom',
+            'Volskaya Foundry'
+        ]
+    }
 ]
 
 const handleMapBan = (message, captains, teams) => {
-    return message.reply("would you like to ban maps? \n 🍆:CSGO, 🍑:Valorant, ❌:Continue")
+    return message.reply("would you like to ban maps? \n 🍆:CSGO, 🍑:Valorant, 🍌:Heroes of the Storm, ❌:Continue")
         .then(msg => {
             msg.react("🍆")
             msg.react("🍑")
+            msg.react("🍌")
             msg.react("❌")
 
-            let reactions = ["🍆", "🍑", "❌"];
+            let reactions = ["🍆", "🍑", "🍌", "❌"];
 
             const gameFilter = (reaction, user) => {
                 return reactions.includes(reaction.emoji.name) &&
