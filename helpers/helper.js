@@ -45,7 +45,7 @@ const movePlayers = (message, res, team) => {
 }
 
 const handleCollectPlayers = (message, args) => {
-    let playerNumber = args[0] || 10;
+    let playerNumber = args || 10;
     let host = message.author;
     let memberArr = []
 

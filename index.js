@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const client = new Client({intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessageReactions, GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]});
 const DBL = require("dblapi.js")
@@ -7,7 +8,7 @@ require("dotenv").config()
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
 // const dblToken = process.env.DBL_TOKEN
-
+const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 // const cooldowns = new Collection();
@@ -19,8 +20,9 @@ client.login(token);
 const commands = [];
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    client.commands.set(command.data.name, command);
 
     commands.push(command.data);
 }
@@ -33,7 +35,6 @@ client.on('interactionCreate', async interaction => {
     if(!command) return;
 
     try {
-        // interaction.reply("yes")
         await command.execute(interaction);
     } catch(ex) {
         console.log(ex);

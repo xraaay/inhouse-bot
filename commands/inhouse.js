@@ -22,13 +22,14 @@ const { SlashCommandBuilder } = require('discord.js')
 module.exports = {
     data: new SlashCommandBuilder().setName('inhouse').setDescription('Yes'),
     async execute(interaction) {
-        if (!message.guild) return;
+        console.log(interaction)
+        // if (!message.guild) return;
 
-        if (message.member.voice.channel) {
+        // if (message.member.voice.channel) {
             // console.log(`Executed Inhouse in ${message.guild.name} for ${args || 10} players`)
-            handleCollectPlayers(interaction, args)
-        } else {
-            message.channel.send("You must be in a voice channel to use this feature")
-        }
+            handleCollectPlayers(interaction, interaction.options.getInteger('number'))
+        // } else {
+        //     message.channel.send("You must be in a voice channel to use this feature")
+        // }
     },
 }
