@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, ChannelType, Embed } = require('discord.js');
 const { shuffleArray, splitArray } = require('../helpers/shuffle');
 const { EmbedBuilder } = require('discord.js');
 const { gamesArr } = require('../helpers/gameArray');
@@ -70,7 +70,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
 				if (reaction.emoji.name === '👍') {
 					// TODO: handleMapBan
 					const captains = [teams.one[0], teams.two[0]];
-					handleMapBan(message, host, captains, teams);
+					handleMapBan(message, host, captains, teams, playerNumber);
 				}
 				else if (reaction.emoji.name === '👎') {
 					handleTeamShuffle(message, host, memberArr, playerNumber);
@@ -82,7 +82,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
 			handleError(err, message);
 		});
 };
-const handleMapBan = (message, host, captains, teams) => {
+const handleMapBan = (message, host, captains, teams, playerNumber) => {
 	return message.channel.send('would you like to ban maps? \n 🍆:CSGO, 🍑:Valorant, 🍌:Heroes of the Storm, ❌:Continue')
 		.then(msg => {
 			Promise.all([
@@ -109,7 +109,8 @@ const handleMapBan = (message, host, captains, teams) => {
 				}
 				const choice = reactions.findIndex(item => item === reaction.emoji.name);
 				if (choice === reactions.length - 1) {
-					message.channel.send('Enjoy your game!');
+					const gameEmbed = gameStartEmbed(host, teams, playerNumber);
+					message.channel.send({ content: 'Enjoy your game!', embeds: [gameEmbed] });
 					createTeamChannels(message, teams.one, 'Team One');
 					createTeamChannels(message, teams.two, 'Team Two');
 				}
@@ -172,7 +173,7 @@ const handleTempChannel = (message, res) => {
 			res.delete();
 			clearInterval(teamChannelCounter);
 		}
-	}, 20000);
+	}, 30000);
 };
 
 const movePlayers = (message, res, team) => {
@@ -248,7 +249,7 @@ const handleInhouseMessageEmbed = (host, teams, playerNumber) => {
 	return new EmbedBuilder()
 		.setColor('#00ffff')
 		.setTitle(`Inhouse for ${playerNumber}`)
-		.setAuthor({ name: host.username, url: `https://cdn.discordapp.com/avatars/${host.id}/${host.avatar}.png` })
+		.setAuthor({ name: host.username, iconURL: `https://cdn.discordapp.com/avatars/${host.id}/${host.avatar}.png` })
 		.addFields({
 			name: 'Team One',
 			value: teams.one.join(', '),
@@ -259,11 +260,24 @@ const handleInhouseMessageEmbed = (host, teams, playerNumber) => {
 		.setTimestamp();
 };
 
+const gameStartEmbed = (host, teams) => {
+	return new EmbedBuilder()
+		.setColor('#2bff00')
+		.setAuthor({ name: `${host.username}'s ${teams.one.length} vs ${teams.two.length} game`, iconURL: `https://cdn.discordapp.com/avatars/${host.id}/${host.avatar}.png` })
+		.addFields({
+			name: teams.one[0].username + '\'s team',
+			value: teams.one.join(', '),
+		}, {
+			name: teams.two[0].username + '\'s team',
+			value: teams.two.join(', '),
+		})
+		.setDescription('If you like this bot please support it by voting on [top.gg](https://top.gg/bot/708468694816391248)');
+};
+
 
 const mapBanEmbed = (maps, captain) => new EmbedBuilder()
 	.setColor('#0077ff')
-	.setTitle(`${captain.username}'s turn`)
-	.setAuthor({ name: captain.username, url: `https://cdn.discordapp.com/avatars/${captain.id}/${captain.avatar}.png` })
+	.setAuthor({ name: `${captain.username}'s turn`, iconURL: `https://cdn.discordapp.com/avatars/${captain.id}/${captain.avatar}.png` })
 	.addFields({
 		name: 'Maps',
 		value: maps.map((item, index) => `${index + 1}. ${item}`).join('\n'),
@@ -279,4 +293,5 @@ const gameEmbed = (game, map, teams) => new EmbedBuilder()
 		name: teams.two[0].username + '\'s team',
 		value: teams.two.join(', '),
 	})
+	.setDescription('If you like this bot please support it by voting on [top.gg](https://top.gg/bot/708468694816391248)')
 	.setTimestamp();
