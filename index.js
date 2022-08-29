@@ -22,7 +22,7 @@ for (const file of commandFiles) {
 const token = process.env.TOKEN;
 
 client.once('ready', () => {
-	client.user.setPresence({ activities: [{ name: 'to /inhouse', type: ActivityType.Listening }] });
+	client.user.setPresence({ activities: [{ name: '/inhouse', type: ActivityType.Listening }] });
 	console.log('Ready!');
 });
 
