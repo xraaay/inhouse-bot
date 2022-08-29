@@ -1,6 +1,6 @@
 # Inhouse Bot
 ####  A Discord bot for organizing inhouse games in server.
-
+#### Now with slash commands
 ---
 
  ## How it works
@@ -16,21 +16,7 @@
 ## Commands
  #### #inhouse [optional: player number]
  Creates two temporary team voice channels and moves players into random teams.  
- Example: `#inhouse 8`
- 
- 
- #### #help [optional: command]
- Gives a list of all the bots commands.  
- Example: `#help inhouse`
-   
-     
- #### #spongebob
- Plays a random spongebob quote in user's voice channel. User must be connected to a voice channel.
-   
-   
- #### #vote
- Sends the link for the bots listing on top.gg
-   
+ Example: `/inhouse 8`
    
 ---
 

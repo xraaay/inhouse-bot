@@ -1,32 +1,19 @@
 {
-  "name": "shuffle-bot",
+  "name": "inhouse",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {
-    "@discordjs/opus": "^0.3.2",
-    "dblapi.js": "^2.4.0",
-    "discord.js": "^12.2.0",
-    "dotenv": "^8.2.0",
-    "ffmpeg-static": "^4.2.1",
-    "ytdl-core": "^2.1.2"
-  },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xraaay/shuffle-bot.git"
+  "author": "Raymond Xie",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/rest": "^1.1.0",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.1"
   },
-  "author": "Raymond Xie <raymond.y.xie@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/xraaay/shuffle-bot/issues"
-  },
-  "homepage": "https://github.com/xraaay/shuffle-bot#readme",
-  "engines": {
-    "node": "12.16.1"
+  "devDependencies": {
+    "eslint": "^8.22.0"
   }
 }
