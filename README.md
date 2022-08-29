@@ -1,6 +1,6 @@
 # Inhouse Bot
+# Now uses slash commands! i.e. /inhouse 10
 ####  A Discord bot for organizing inhouse games in server.
-#### Now with slash commands
 ---
 
  ## How it works
