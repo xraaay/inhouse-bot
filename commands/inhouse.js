@@ -271,7 +271,7 @@ const gameStartEmbed = (host, teams) => {
 			name: teams.two[0].username + '\'s team',
 			value: teams.two.join(', '),
 		})
-		.setDescription('If you like this bot please support it by voting on [top.gg](https://top.gg/bot/708468694816391248)');
+		.setDescription('If you like this bot please support it by voting on [top.gg](https://top.gg/bot/708468694816391248/vote)');
 };
 
 
@@ -293,5 +293,5 @@ const gameEmbed = (game, map, teams) => new EmbedBuilder()
 		name: teams.two[0].username + '\'s team',
 		value: teams.two.join(', '),
 	})
-	.setDescription('If you like this bot please support it by voting on [top.gg](https://top.gg/bot/708468694816391248)')
+	.setDescription('If you like this bot please support it by voting on [top.gg](https://top.gg/bot/708468694816391248/vote)')
 	.setTimestamp();
