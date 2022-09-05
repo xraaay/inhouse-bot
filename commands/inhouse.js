@@ -36,7 +36,13 @@ module.exports = {
 				message.channel.send('Not enough players');
 			}
 			else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
-				handleTeamShuffle(interaction, host, memberArr, playerNumber);
+				try {
+					handleTeamShuffle(interaction, host, memberArr, playerNumber);
+				}
+				catch (ex) {
+					console.log(ex);
+					message.channel.send('Error: ' + (ex.message || ''));
+				}
 			}
 			else {
 				message.channel.send('Unknown Error');
