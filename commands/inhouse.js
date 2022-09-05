@@ -33,19 +33,13 @@ module.exports = {
 
 		collector.on('end', collected => {
 			if (playerNumber > memberArr.length) {
-				message.reply('Not enough players');
+				message.channel.send('Not enough players');
 			}
 			else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
 				handleTeamShuffle(interaction, host, memberArr, playerNumber);
-				// const shuffledTeams = shuffleArray(memberArr);
-				// const teams = splitArray(shuffledTeams);
-
-				// const response = handleInhouseMessageEmbed(host, teams, playerNumber);
-
-				// message.reply({ embeds: [response] });
 			}
 			else {
-				message.reply('Error');
+				message.channel.send('Unknown Error');
 			}
 		});
 	},
