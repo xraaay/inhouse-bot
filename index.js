@@ -20,8 +20,10 @@ for (const file of commandFiles) {
 }
 
 const token = process.env.TOKEN;
+let logChannel;
 
 client.once('ready', () => {
+	logChannel = client.channels.cache.get('1016610685683253288');
 	client.user.setPresence({ activities: [{ name: '/inhouse', type: ActivityType.Listening }] });
 	console.log('Ready!');
 });
@@ -43,4 +45,13 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
+client.on('shardError', err => {
+	console.error('shard', err);
+	logChannel.send(err.message);
+});
+
+process.on('unhandledRejection', err => {
+	console.error('unhandled', err);
+	logChannel.send(err.message);
+});
 client.login(token);
