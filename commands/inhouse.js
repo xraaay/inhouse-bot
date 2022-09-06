@@ -45,7 +45,7 @@ module.exports = {
 				}
 			}
 			else {
-				message.channel.send('Unknown Error');
+				interaction.channel.send('Unknown error');
 			}
 		});
 	},
@@ -68,7 +68,6 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
 
 			collection.on('collect', (reaction) => {
 				if (reaction.emoji.name === '👍') {
-					// TODO: handleMapBan
 					const captains = [teams.one[0], teams.two[0]];
 					handleMapBan(message, host, captains, teams, playerNumber);
 				}
