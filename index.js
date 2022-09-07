@@ -21,13 +21,13 @@ for (const file of commandFiles) {
 
 const token = process.env.TOKEN;
 let logChannel;
+let currChannel;
 
 client.once('ready', () => {
 	logChannel = client.channels.cache.get('1016610685683253288');
 	client.user.setPresence({ activities: [{ name: '/inhouse', type: ActivityType.Listening }] });
 	console.log('Ready!');
 });
-
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
@@ -40,7 +40,7 @@ client.on('interactionCreate', async interaction => {
 		await command.execute(interaction);
 	}
 	catch (error) {
-		console.error(error);
+		console.error('catch error', error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
