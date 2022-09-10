@@ -8,7 +8,6 @@ const DBL = require('dblapi.js');
 
 const token = process.env.TOKEN;
 const dblToken = process.env.DBL_TOKEN;
-const dbl = new DBL(dblToken, client);
 
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -16,6 +15,8 @@ const client = new Client({ intents: [
 	GatewayIntentBits.GuildVoiceStates,
 	GatewayIntentBits.GuildMessageReactions,
 ] });
+const dbl = new DBL(dblToken, client);
+
 client.commands = new Collection();
 
 for (const file of commandFiles) {
