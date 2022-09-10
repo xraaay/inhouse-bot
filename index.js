@@ -4,6 +4,11 @@ const path = require('node:path');
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 require('dotenv').config();
+const DBL = require('dblapi.js');
+
+const token = process.env.TOKEN;
+const dblToken = process.env.DBL_TOKEN;
+const dbl = new DBL(dblToken, client);
 
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -19,14 +24,12 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-const token = process.env.TOKEN;
 let logChannel;
-let currChannel;
 
 client.once('ready', () => {
 	logChannel = client.channels.cache.get('1016610685683253288');
 	client.user.setPresence({ activities: [{ name: '/inhouse', type: ActivityType.Listening }] });
-	console.log(`Ready!, ${client.guilds.cache.count} servers`);
+	console.log('Ready!');
 });
 
 client.on('interactionCreate', async interaction => {
