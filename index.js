@@ -26,7 +26,7 @@ let currChannel;
 client.once('ready', () => {
 	logChannel = client.channels.cache.get('1016610685683253288');
 	client.user.setPresence({ activities: [{ name: '/inhouse', type: ActivityType.Listening }] });
-	console.log(`Ready!, ${client.guilds.cache.length} servers`);
+	console.log(`Ready!, ${client.guilds.cache.count} servers`);
 });
 
 client.on('interactionCreate', async interaction => {
