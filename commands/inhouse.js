@@ -77,7 +77,7 @@ const handleTeamShuffle = (message, host, memberArr, playerNumber) => {
 			});
 		})
 		.catch(err => {
-			console.log('handleTeamShuffle');
+			console.log('handleTeamShuffle');'';
 			handleError(err, message);
 		});
 };
