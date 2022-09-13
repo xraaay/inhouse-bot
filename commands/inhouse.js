@@ -25,8 +25,8 @@ module.exports = {
 		const memberArr = [];
 
 		collector.on('collect', (r, user) => {
-			console.log(`Collected ${r.emoji.name} from ${user.tag}`);
 			if (!memberArr.includes(user)) {
+				console.log(`Collected ${r.emoji.name} from ${user.tag}`);
 				memberArr.push(user);
 			}
 		});
