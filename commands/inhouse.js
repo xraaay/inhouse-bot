@@ -33,7 +33,7 @@ module.exports = {
 
 		collector.on('end', collected => {
 			if (playerNumber > memberArr.length) {
-				console.log('not enough players');
+				console.log(`Not enough players. Needed ${playerNumber}, got ${memberArr.length}`);
 				interaction.channel.send('Not enough players');
 			}
 			else if (memberArr.length % 2 === 0 && memberArr.length !== 0) {
