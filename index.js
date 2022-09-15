@@ -29,7 +29,7 @@ let logChannel;
 
 client.once('ready', () => {
 	logChannel = client.channels.cache.get('1016610685683253288');
-	client.user.setPresence({ activities: [{ name: '/inhouse', type: ActivityType.Listening }] });
+	client.user.setPresence({ activities: [{ name: '/inhouse [number]', type: ActivityType.Listening }] });
 	let count = 0;
 	client.guilds.cache.forEach(() => count++);
 	console.log('Ready! ' + count + ' servers');
