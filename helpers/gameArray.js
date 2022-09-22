@@ -6,7 +6,7 @@ const gamesArr = [{
 {
 	name: 'VALORANT',
 	emoji: '🍑',
-	maps: ['Ascent', 'Haven', 'Split', 'Bind', 'Icebox', 'Fracture'],
+	maps: ['Ascent', 'Haven', 'Split', 'Bind', 'Icebox', 'Fracture', 'Pearl', 'Breeze'],
 },
 {
 	name: 'Heroes of the Storm',
